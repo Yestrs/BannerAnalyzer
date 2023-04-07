@@ -13,7 +13,6 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
 
-
     <!-- Scripts -->
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -27,7 +26,10 @@
             <h1 class="m-4 text-5xl text-gray-300">Banner Analyzer</h1>
             <p class="m-2 text-lg text-gray-300">Description</p>
 
-            <form class="w-8/12 my-4" type="POST">
+
+
+            <form class="w-8/12 my-4" type="POST" action="/results">
+                @csrf
                 <label for="default-search"
                     class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Analyze</label>
                 <div class="relative">
@@ -38,7 +40,7 @@
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
-                    <input type="url" id="default-search"
+                    <input type="url" name="url" id="default-search"
                         class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Analyze websites banners..." required>
                     <button type="submit"

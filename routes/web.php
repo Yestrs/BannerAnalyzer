@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogsController;
+use App\Http\Controllers\Searched_WebsitesController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,9 +23,12 @@ Route::get('/about', function () {
     return view('public.p_about');
 })->name('p_about');
 
-Route::get('/results', function () {
-    return view('public.p_results');
-})->name('p_results');
+//Route::get('/results', function () {
+//    return view('public.p_results');
+//})->name('p_results');
+
+
+Route::any('/results', [Searched_WebsitesController::class, 'analyzeWebsite']);
 
 
 

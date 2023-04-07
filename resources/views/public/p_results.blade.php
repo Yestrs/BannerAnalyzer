@@ -28,6 +28,7 @@
             <div class="flex px-4 py-3 text-white bg-gray-900 my-8 mx-16 flex-col items-center rounded-xl">
                 <h1 class="m-4 text-5xl text-gray-300">Results of DOMAIN</h1>
                 <p class="m-2 text-lg text-gray-300">desc of what kind of results are showed</p>
+                <p class="m-2 text-lg text-gray-300"><pre><?php echo print_r($obj); ?></pre></p>
             </div>
         </div>
 
