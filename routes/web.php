@@ -5,6 +5,7 @@ use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\Searched_WebsitesController;
+use App\Http\Controllers\HomeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,7 +31,7 @@ Route::get('/about', function () {
 
 Route::any('/results', [Searched_WebsitesController::class, 'analyzeWebsite']);
 
-
+Route::any('/results/{id}', [Searched_WebsitesController::class, 'getAnalyzedWebsitesData'])->name('p_results');
 
 Route::group(['middleware' => 'auth'], function() {
 
@@ -39,12 +40,12 @@ Route::group(['middleware' => 'auth'], function() {
             'middleware' => 'is_admin',
             'as' => 'admin.',
         ], function() {
-            Route::get('dashboard', function () { return view('admin.a_home'); })->name('dashboard');
+            Route::get('dashboard', [HomeController::class, 'adminHome'])->name('dashboard');
             Route::get('users', [UsersController::class, 'getData'])->name('a_users');
-            Route::get('websites', function () { return view('admin.a_websites'); })->name('a_websites');
+            Route::get('webiste', [Searched_WebsitesController::class, 'getData'])->name('a_websites');
             Route::get('logs', [LogsController::class, 'getData'])->name('a_logs');
+            Route::patch('users', [UsersController::class, 'ban'])->name('users.ban');
         });
-
 
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

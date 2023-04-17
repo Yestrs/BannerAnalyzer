@@ -25,6 +25,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($users as $user)
+                                    @include('admin.partials.ban-user')
                                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                         <th scope="row"
                                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -46,8 +47,18 @@
                                                     href=""
                                                     class="font-medium text-green-600 dark:text-green-500 hover:underline">Show</a>
                                             @endif
-                                            <a href="#"
-                                                class="font-medium text-red-600 dark:text-red-500 hover:underline pl-3">Ban</a>
+                                            @if ($user->is_banned == false)
+                                                <a id="ban-user-btn" x-data=""
+                                                    x-on:click.prevent="$dispatch('open-modal', 'ban-user-{{ $user->id }}')"
+                                                    href=""
+                                                    class="font-medium text-red-600 dark:text-red-500 hover:underline pl-3">Ban</a>
+                                            @else
+                                                <a id="ban-user-btn" x-data=""
+                                                    x-on:click.prevent="$dispatch('open-modal', 'ban-user-{{ $user->id }}')"
+                                                    href=""
+                                                    class="font-medium text-green-600 dark:text-green-500 hover:underline pl-3">Unban</a>
+                                            @endif
+
                                         </td>
                                     </tr>
                                     @include('admin.partials.show-user-data')

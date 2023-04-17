@@ -4,11 +4,11 @@
         @method('patch')
         <div class="p-6">
             <h2 class="text-lg text-center font-medium text-gray-900 dark:text-gray-100">
-                {{ __('Text?') }}
+                {{ __('You are currently seeing - ' . $user->username) }}
             </h2>
 
             <p class="mt-1 text-sm text-center text-gray-600 dark:text-gray-400 pb-4">
-                {{ __('Description') }}
+                {{ __('You can not edit users data, only see non sensitive information for their safety') }}
             </p>
 
             <x-input-label for="name" value="{{ __('Name') }}" class="mt-2" />

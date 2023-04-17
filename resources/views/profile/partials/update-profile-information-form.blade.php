@@ -24,6 +24,18 @@
         </div>
 
         <div>
+            <x-input-label for="surname" :value="__('Surname')" />
+            <x-text-input id="surname" name="surname" type="text" class="mt-1 block w-full" :value="old('surname', $user->surname)" autofocus autocomplete="surname" />
+            <x-input-error class="mt-2" :messages="$errors->get('surname')" />
+        </div>
+
+        <div>
+            <x-input-label for="username" :value="__('Username')" />
+            <x-text-input id="username" name="username" type="text" class="mt-1 block w-full" :value="old('username', $user->username)" required autofocus autocomplete="username" />
+            <x-input-error class="mt-2" :messages="$errors->get('username')" />
+        </div>
+
+        <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
@@ -45,6 +57,30 @@
                     @endif
                 </div>
             @endif
+        </div>
+        
+        <div>
+            <x-input-label for="social_facebook" :value="__('Facebook')" />
+            <x-text-input id="social_facebook" name="social_facebook" type="text" class="mt-1 block w-full" :value="old('social_facebook', $user->social_facebook)" autofocus />
+            <x-input-error class="mt-2" :messages="$errors->get('social_facebook')" />
+        </div>
+        
+        <div>
+            <x-input-label for="social_github" :value="__('Github')" />
+            <x-text-input id="social_github" name="social_github" type="text" class="mt-1 block w-full" :value="old('social_github', $user->social_github)" autofocus />
+            <x-input-error class="mt-2" :messages="$errors->get('social_github')" />
+        </div>
+
+        <div>
+            <x-input-label for="social_linkedin" :value="__('Linked In')" />
+            <x-text-input id="social_linkedin" name="social_linkedin" type="text" class="mt-1 block w-full" :value="old('social_linkedin', $user->social_linkedin)" autofocus />
+            <x-input-error class="mt-2" :messages="$errors->get('social_linkedin')" />
+        </div>
+
+        <div>
+            <x-input-label for="bio" :value="__('Bio')" />
+            <textarea  id="bio" name="bio" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm w-full p-3" rows="5">{{ old('bio', $user->bio) }}</textarea> 
+            <x-input-error class="mt-2" :messages="$errors->get('bio')" />
         </div>
 
         <div class="flex items-center gap-4">

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('action');
             $table->string('data');
-            $table->dateTime('time');
-            $table->unsignedBigInteger('changes_made_by');
+            $table->dateTime('time')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->unsignedBigInteger('changes_made_by')->nullable();
             $table->unsignedBigInteger('changes_made_to')->nullable();
             $table->timestamps();
             
