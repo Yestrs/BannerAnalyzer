@@ -1,7 +1,7 @@
 <x-panel-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Logs') }}
+            {{ __('Analyzed websites') }}
         </h2>
     </x-slot>
 
@@ -26,12 +26,19 @@
                             <tbody>
                                 @foreach ($websites as $website)
                                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                        @php
+                                            $user = App\Models\User::find($website->last_searched_by);
+                                        @endphp
                                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ $website->id }}</th>
                                         <td class="px-6 py-4">{{ $website->name }}</td>
                                         <td class="px-6 py-4">{{ $website->domain }}</td>
                                         <td class="px-6 py-4">{{ $website->search_times }}</td>
-                                        <td class="px-6 py-4">{{ $website->last_searched_by }}</td>
+                                        <td class="px-6 py-4">
+                                            @isset($user->username)
+                                            {{ $user->username }}
+                                            @endisset
+                                        </td>
                                         <td class="px-6 py-4">{{ $website->updated_at }}</td>
                                         <td class="px-6 py-4">
                                             @if ($website->data)

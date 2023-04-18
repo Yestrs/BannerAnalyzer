@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Comments;
 
 class HomeController extends Controller
 {
@@ -38,9 +39,22 @@ class HomeController extends Controller
         $home_obj->total_banned_users = DB::table('users')->where('is_banned', 1)->count();
         $home_obj->total_logs = DB::table('logs')->count();
         $home_obj->total_admins = DB::table('users')->where('is_admin', 1)->count();
+        $home_obj->total_comments = DB::table('comments')->count();
         
 
         return view('admin.a_home', compact('home_obj'));
 
     }
+
+    public function aboutus() {
+        
+        $comments = Comments::with('user_made_by', 'user_made_to')->get();
+
+        
+        
+
+        return view('admin.a_home', compact('comments'));
+
+    }
+
 }

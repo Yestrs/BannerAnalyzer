@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\Searched_WebsitesController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CommentsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,9 +21,7 @@ use App\Http\Controllers\HomeController;
 Route::get('/', function () {
     return view('public.p_homePage');
 })->name('p_homePage');
-Route::get('/about', function () {
-    return view('public.p_about');
-})->name('p_about');
+Route::get('about', [CommentsController::class, 'getLatestThreeComments'])->name('p_about');
 
 //Route::get('/results', function () {
 //    return view('public.p_results');
@@ -44,9 +43,12 @@ Route::group(['middleware' => 'auth'], function() {
             Route::get('users', [UsersController::class, 'getData'])->name('a_users');
             Route::get('webiste', [Searched_WebsitesController::class, 'getData'])->name('a_websites');
             Route::get('logs', [LogsController::class, 'getData'])->name('a_logs');
+            Route::get('comments', [CommentsController::class, 'getData'])->name('a_comments');
             Route::patch('users', [UsersController::class, 'ban'])->name('users.ban');
         });
 
+
+        Route::patch('/results', [CommentsController::class, 'addComment'])->name('comment.add');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

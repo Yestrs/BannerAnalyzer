@@ -134,6 +134,36 @@
         </section>
 
 
+        <section class="flex px-4 py-3 text-white bg-gray-900 my-8 mx-16 flex-col items-center rounded-xl">
+            <h1 class="m-4 text-5xl text-gray-300">Top rated comments</h1>
+            <p class="m-2 text-lg text-gray-300 text-center w-2/3 mb-12">See who is recomending our services</p>
+            @foreach ($comments as $comment)
+                <article class="bg-gray-800 p-6 rounded-xl mb-4 min-w-full">
+                    <div class="flex items-center mb-4 space-x-4">
+                        <div class="space-y-1 font-medium dark:text-white">
+                            @php
+                                $user = App\Models\User::find($comment->user_id);
+                            @endphp
+
+                            <p>{{ $user->username }} -> {{ $user->name }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center mb-1">
+                        @for ($i = 0; $i < $comment->stars; $i++)
+                            <x-star-svg></x-star-svg>
+                        @endfor
+
+
+                    </div>
+                    <footer class="mb-5 text-sm text-gray-500 dark:text-gray-400">
+                        <p>Time posted - {{ $comment->created_at }}</p>
+                    </footer>
+                    <p class="mb-2 text-gray-500 dark:text-gray-400">{{ $comment->comment }}</p>
+                </article>
+            @endforeach
+        </section>
+
+
 
 
 
