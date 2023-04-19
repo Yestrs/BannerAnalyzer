@@ -134,6 +134,40 @@
         </section>
 
 
+        <section class="p-6">
+
+            <ol class="relative border-l border-gray-200 dark:border-gray-700">
+                <li class="mb-10 ml-4">
+                    <div
+                        class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700">
+                    </div>
+                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">April 19 2023</time>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Major admin panel and results updates
+                    </h3>
+                    <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">Admins now have access to give other users admin permissions, delete comments, ban, unban users and much mroe</p>
+                </li>
+                <li class="mb-10 ml-4">
+                    <div
+                        class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700">
+                    </div>
+                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">March 30</time>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Major client UI updates</h3>
+                    <p class="text-base font-normal text-gray-500 dark:text-gray-400">Updated client UI from Bootsrap to TailwindCSS for better development process</p>
+                </li>
+                <li class="ml-4">
+                    <div
+                        class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700">
+                    </div>
+                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">April 20</time>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Started working on this project
+                    </h3>
+                    <p class="text-base font-normal text-gray-500 dark:text-gray-400">Made Github, autorunner for main server to automaticly push any commits straight to production <a href="http://banneranalyzer.com">http://banneranalyzer.com</a></p>
+                </li>
+            </ol>
+
+        </section>
+
+
         <section class="flex px-4 py-3 text-white bg-gray-900 my-8 mx-16 flex-col items-center rounded-xl">
             <h1 class="m-4 text-5xl text-gray-300">Top rated comments</h1>
             <p class="m-2 text-lg text-gray-300 text-center w-2/3 mb-12">See who is recomending our services</p>

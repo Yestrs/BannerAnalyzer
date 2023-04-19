@@ -19,7 +19,7 @@
                                 <th scope="col" class="px-6 py-3">Id</th>
                                 <th scope="col" class="px-6 py-3">Created by</th>
                                 <th scope="col" class="px-6 py-3">Created at</th>
-                                <th scope="col" class="px-6 py-3">Show Comment</th>
+                                <th scope="col" class="px-6 py-3">Actions</th>
                             </thead>
                             <tbody>
                                 @foreach ($comments as $comment)
@@ -33,18 +33,32 @@
                                         @endphp
                                         <td class="px-6 py-4">{{ $user->username }}</td>
                                         <td class="px-6 py-4">{{ $comment->created_at }}</td>
-                                        <td class="px-6 py-4"><a id="ban-user-btn" x-data=""
-                                            x-on:click.prevent="$dispatch('open-modal', 'show-comment-{{ $comment->id }}')"
-                                            href=""
-                                            class="font-medium text-green-600 dark:text-green-500 hover:underline pl-3">Show
-                                            comment</a>
+                                        <td class="px-6 py-4 flex flex-row">
+                                            <div>
+                                                <a id="ban-user-btn" x-data=""
+                                                    x-on:click.prevent="$dispatch('open-modal', 'show-comment-{{ $comment->id }}')"
+                                                    href=""
+                                                    class="font-medium text-green-600 dark:text-green-500 hover:underline pl-3">Show
+                                                    comment</a>
+                                            </div>
+                                            <div>
+                                                <a id="ban-user-btn" x-data=""
+                                                    x-on:click.prevent="$dispatch('open-modal', 'remove-comment-{{ $comment->id }}')"
+                                                    href=""
+                                                    class="font-medium text-red-600 dark:text-red-500 hover:underline pl-3">Delete</a>
+                                            </div>
+
+
                                         </td>
                                         @include('admin.partials.show-comment')
-
+                                        @include('admin.partials.remove-comment')
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="place-self-center p-6">
+                            {!! $comments->links() !!}
+                        </div>
                     </div>
 
                 </div>

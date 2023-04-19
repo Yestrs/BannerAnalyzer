@@ -53,8 +53,13 @@
                                         <!-- Jasafixo šis empty tā ka tas sataisīts a_users -->
                                     </tr>
                                 @endforeach
+
                             </tbody>
                         </table>
+                        <div class="place-self-center p-6">
+                            {!! $logs->links() !!}
+                        </div>
+
                     </div>
 
                 </div>

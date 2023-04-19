@@ -25,7 +25,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($users as $user)
-                                    @include('admin.partials.ban-user')
+                                    {{-- @include('admin.partials.ban-user') --}}
                                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                         <th scope="row"
                                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -40,31 +40,61 @@
                                             @endif
                                         </td>
                                         <td class="px-6 py-4">{{ $user->created_at }}</td>
-                                        <td class="px-6 py-4">
-                                            @if ($user->name || $user->surname || $user->bio != null)
-                                                <a id="edit-user-btn" x-data=""
-                                                    x-on:click.prevent="$dispatch('open-modal', 'show-user-data-{{ $user->id }}')"
-                                                    href=""
-                                                    class="font-medium text-green-600 dark:text-green-500 hover:underline">Show</a>
-                                            @endif
-                                            @if ($user->is_banned == false)
-                                                <a id="ban-user-btn" x-data=""
-                                                    x-on:click.prevent="$dispatch('open-modal', 'ban-user-{{ $user->id }}')"
-                                                    href=""
-                                                    class="font-medium text-red-600 dark:text-red-500 hover:underline pl-3">Ban</a>
-                                            @else
-                                                <a id="ban-user-btn" x-data=""
-                                                    x-on:click.prevent="$dispatch('open-modal', 'ban-user-{{ $user->id }}')"
-                                                    href=""
-                                                    class="font-medium text-green-600 dark:text-green-500 hover:underline pl-3">Unban</a>
-                                            @endif
+                                        <td class="px-6 py-4 flex flex-row">
+                                            <div>
+                                                @if ($user->name || $user->surname || $user->bio != null)
+                                                    <a id="edit-user-btn" x-data=""
+                                                        x-on:click.prevent="$dispatch('open-modal', 'show-user-data-{{ $user->id }}')"
+                                                        href=""
+                                                        class="font-medium text-green-600 dark:text-green-500 hover:underline">Show</a>
+                                                @endif
+                                            </div>
+                                            <div>
+                                                @if ($user->is_banned == false)
+                                                    <a id="ban-user-btn" x-data=""
+                                                        x-on:click.prevent="$dispatch('open-modal', 'ban-user-{{ $user->id }}')"
+                                                        href=""
+                                                        class="font-medium text-red-600 dark:text-red-500 hover:underline pl-3">Ban</a>
+                                                @else
+                                                    <a id="ban-user-btn" x-data=""
+                                                        x-on:click.prevent="$dispatch('open-modal', 'ban-user-{{ $user->id }}')"
+                                                        href=""
+                                                        class="font-medium text-green-600 dark:text-green-500 hover:underline pl-3">Unban</a>
+                                                @endif
+                                            </div>
+                                            <div>
+                                                @if ($user->is_admin == false)
+                                                    <a id="ban-user-btn" x-data=""
+                                                        x-on:click.prevent="$dispatch('open-modal', 'set-admin-user-{{ $user->id }}')"
+                                                        href=""
+                                                        class="font-medium text-green-600 dark:text-green-500 hover:underline pl-3">Set
+                                                        admin</a>
+                                                @else
+                                                    <a id="ban-user-btn" x-data=""
+                                                        x-on:click.prevent="$dispatch('open-modal', 'set-admin-user-{{ $user->id }}')"
+                                                        href=""
+                                                        class="font-medium text-red-600 dark:text-red-500 hover:underline pl-3">Remove
+                                                        admin</a>
+                                                @endif
+                                            </div>
+
+
 
                                         </td>
                                     </tr>
+                                    @include('admin.partials.ban-user')
+
+
+                                    @include('admin.partials.set-admin-user')
+
+
                                     @include('admin.partials.show-user-data')
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="place-self-center p-6">
+                            {!! $users->links() !!}
+                        </div>
                     </div>
                 </div>
             </div>

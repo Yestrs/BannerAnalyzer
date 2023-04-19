@@ -50,6 +50,9 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="place-self-center p-6">
+                            {!! $websites->links() !!}
+                        </div>
                     </div>
                     
                 </div>

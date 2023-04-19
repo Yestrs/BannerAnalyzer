@@ -10,7 +10,7 @@ class CommentsController extends Controller
 {
 
     function getData() {
-        $comments = Comments::all();
+        $comments = Comments::orderBy('created_at','DESC')->paginate(10);
 
         return view('admin.a_comments', compact('comments'));
     }
@@ -30,11 +30,11 @@ class CommentsController extends Controller
         $comment->user_id = auth()->user()->id;
         $comment->save();
 
-        return redirect()->back();
+        return redirect('/results' . '/' . $website_id);
     }
 
     public function removeComment(Request $request) {
-        $comment = Comments::find(request('comment_id'));
+        $comment = Comments::find(request('id'));
         $comment->delete();
 
         return redirect()->back();

@@ -44,7 +44,9 @@ Route::group(['middleware' => 'auth'], function() {
             Route::get('webiste', [Searched_WebsitesController::class, 'getData'])->name('a_websites');
             Route::get('logs', [LogsController::class, 'getData'])->name('a_logs');
             Route::get('comments', [CommentsController::class, 'getData'])->name('a_comments');
-            Route::patch('users', [UsersController::class, 'ban'])->name('users.ban');
+            Route::delete('comments/remove', [CommentsController::class, 'removeComment'])->name('comment.remove');
+            Route::patch('users/ban', [UsersController::class, 'ban'])->name('users.ban');
+            Route::patch('users/admin', [UsersController::class, 'setAdmin'])->name('users.admin');
         });
 
 
@@ -58,3 +60,6 @@ Route::group(['middleware' => 'auth'], function() {
 
 
 require __DIR__.'/auth.php';
+
+
+// VAJAG safixot route kad noposto comment tad lai nescrapo velreiz to pašu url

@@ -22,7 +22,7 @@ class Searched_WebsitesController extends Controller
     public $bug = 0;
     function getData()
     {
-        $websites = Searched_websites::all();
+        $websites = Searched_websites::orderBy('created_at','DESC')->paginate(10);
 
         return view('admin.a_websites', compact('websites'));
     }

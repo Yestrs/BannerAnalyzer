@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class LogsController extends Controller
 {
     function getData() {
-        $logs = Logs::with('user_made_by', 'user_made_to')->get();
+        $logs = Logs::with('user_made_by', 'user_made_to')->orderBy('created_at','DESC')->paginate(10);
 
         return view('admin.a_logs', compact('logs'));
     }
