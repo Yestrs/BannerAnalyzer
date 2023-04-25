@@ -24,8 +24,8 @@
     @include('layouts.navigation')
 
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col items-center mt-6 ml-16 mr-16">
-        <section>
-            <div id="accordion-open" data-accordion="open">
+        <section class="flex flex-col items-center">
+            <div id="accordion-open" data-accordion="open" class="w-3/4">
                 <h2 id="accordion-open-heading-1">
                     <button type="button"
                         class="flex items-center justify-between w-full p-5 font-medium text-left text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -141,27 +141,35 @@
                     <div
                         class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700">
                     </div>
-                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">April 19 2023</time>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Major admin panel and results updates
+                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">April 19
+                        2023</time>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Major admin panel and results
+                        updates
                     </h3>
-                    <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">Admins now have access to give other users admin permissions, delete comments, ban, unban users and much mroe</p>
+                    <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">Admins now have access to
+                        give other users admin permissions, delete comments, ban, unban users and much mroe</p>
                 </li>
                 <li class="mb-10 ml-4">
                     <div
                         class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700">
                     </div>
-                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">March 30</time>
+                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">March
+                        30</time>
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Major client UI updates</h3>
-                    <p class="text-base font-normal text-gray-500 dark:text-gray-400">Updated client UI from Bootsrap to TailwindCSS for better development process</p>
+                    <p class="text-base font-normal text-gray-500 dark:text-gray-400">Updated client UI from Bootsrap
+                        to TailwindCSS for better development process</p>
                 </li>
                 <li class="ml-4">
                     <div
                         class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700">
                     </div>
-                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">April 20</time>
+                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">April
+                        20</time>
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Started working on this project
                     </h3>
-                    <p class="text-base font-normal text-gray-500 dark:text-gray-400">Made Github, autorunner for main server to automaticly push any commits straight to production <a href="http://banneranalyzer.com">http://banneranalyzer.com</a></p>
+                    <p class="text-base font-normal text-gray-500 dark:text-gray-400">Made Github, autorunner for main
+                        server to automaticly push any commits straight to production <a
+                            href="http://banneranalyzer.com">http://banneranalyzer.com</a></p>
                 </li>
             </ol>
 

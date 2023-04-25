@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use App\Http\Controllers\LogsController;
 
+
 class ProfileController extends Controller
 {
     /**
@@ -17,6 +18,8 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $log = new LogsController();
+        $log->logAction('profile edited', $request->user()->username, Null);
         return view('profile.edit', [
             'user' => $request->user(),
         ]);
