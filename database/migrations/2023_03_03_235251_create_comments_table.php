@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('website_id');
             $table->text('comment');
             $table->tinyInteger('stars')->default(5);
+            $table->boolean('aproved')->default(0);
             $table->timestamps();
             
             $table->foreign('website_id')->references('id')->on('searched_websites');

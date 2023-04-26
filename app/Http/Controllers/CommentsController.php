@@ -10,13 +10,21 @@ class CommentsController extends Controller
 {
 
     function getData() {
-        $comments = Comments::orderBy('created_at','DESC')->paginate(10);
+        $comments = Comments::orderBy('created_at','DESC')->orderBy('aproved','DESC')->paginate(10);
 
         return view('admin.a_comments', compact('comments'));
     }
 
+    function commentAprove() {
+        $comment = Comments::find(request('id'));
+        $comment->aproved = 1;
+        $comment->save();
+
+        return redirect()->back();
+    }
+
     function getLatestThreeComments() {
-        $comments = Comments::orderBy('stars', 'desc')->orderBy('created_at', 'desc')->take(3)->get();
+        $comments = Comments::orderBy('stars', 'desc')->orderBy('created_at', 'desc')->where('aproved', 1)->take(15)->paginate(3);
 
         return view('public.p_about', compact('comments'));
     }

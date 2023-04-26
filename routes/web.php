@@ -47,6 +47,7 @@ Route::group(['middleware' => 'auth'], function() {
             Route::delete('comments/remove', [CommentsController::class, 'removeComment'])->name('comment.remove');
             Route::patch('users/ban', [UsersController::class, 'ban'])->name('users.ban');
             Route::patch('users/admin', [UsersController::class, 'setAdmin'])->name('users.admin');
+            Route::any('/comments-aprove/{id}', [CommentsController::class, 'commentAprove'])->name('comments-aprove');
         });
 
 

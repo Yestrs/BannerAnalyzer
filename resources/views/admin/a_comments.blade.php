@@ -19,6 +19,7 @@
                                 <th scope="col" class="px-6 py-3">Id</th>
                                 <th scope="col" class="px-6 py-3">Created by</th>
                                 <th scope="col" class="px-6 py-3">Created at</th>
+                                <th scope="col" class="px-6 py-3">Aproved</th>
                                 <th scope="col" class="px-6 py-3">Actions</th>
                             </thead>
                             <tbody>
@@ -33,19 +34,37 @@
                                         @endphp
                                         <td class="px-6 py-4">{{ $user->username }}</td>
                                         <td class="px-6 py-4">{{ $comment->created_at }}</td>
+                                        <td class="px-6 py-4">
+                                            @if ($comment->aproved == true)
+                                                <span
+                                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                                    Aproved
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-red-100">
+                                                    Not aproved
+                                                </span>
+                                            @endif
+                                        </td>
                                         <td class="px-6 py-4 flex flex-row">
                                             <div>
-                                                <a id="ban-user-btn" x-data=""
+                                                <a id="show-comment-btn" x-data=""
                                                     x-on:click.prevent="$dispatch('open-modal', 'show-comment-{{ $comment->id }}')"
                                                     href=""
                                                     class="font-medium text-green-600 dark:text-green-500 hover:underline pl-3">Show
                                                     comment</a>
                                             </div>
                                             <div>
-                                                <a id="ban-user-btn" x-data=""
+                                                <a id="remove-comment-btn" x-data=""
                                                     x-on:click.prevent="$dispatch('open-modal', 'remove-comment-{{ $comment->id }}')"
                                                     href=""
                                                     class="font-medium text-red-600 dark:text-red-500 hover:underline pl-3">Delete</a>
+                                            </div>
+                                            <div>
+                                                @if ($comment->aproved != true)
+                                                    <a id="aprove-comment" x-data="" href="{{ route('admin.comments-aprove', ['id' =>  $comment->id]) }}" class="font-medium text-green-600 dark:text-green-500 hover:underline pl-3">Aprove</a>
+                                                @endif
                                             </div>
 
 
