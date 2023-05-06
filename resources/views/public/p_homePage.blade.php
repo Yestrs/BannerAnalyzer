@@ -44,13 +44,19 @@
                     <input type="url" name="url" id="default-search"
                         class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Analyze websites banners..." required>
-                    <button type="submit"
+                    <button id="submit_button" type="submit"
                         class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Analyze</button>
                 </div>
             </form>
         </div>
         
-        
+        <div class="text-slider-container mt-4">
+            <div class="text-slider bg-gray-100 p-4 rounded-lg shadow-md" style="display:none;">
+                <p class="text-lg font-medium text-gray-800">Dummy Text 1</p>
+                <p class="text-lg font-medium text-gray-800">Dummy Text 2</p>
+                <p class="text-lg font-medium text-gray-800">Dummy Text 3</p>
+            </div>
+        </div>
         
         <div class="flex w-full justify-center" >
             <div id="default-carousel" class="relative w-2/3" data-carousel="slide">
@@ -64,19 +70,19 @@
                     </div>
                     <!-- Item 2 -->
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="{{url('/img/slider-2.png')}}"
+                        <img src="{{url('/img/slider-2.webp')}}"
                             class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
                             alt="...">
                     </div>
                     <!-- Item 3 -->
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="{{url('/img/slider-3.jpg')}}"
+                        <img src="{{url('/img/slider-3.webp')}}"
                             class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
                             alt="...">
                     </div>
                     <!-- Item 4 -->
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="{{url('/img/slider-4.jpg')}}"
+                        <img src="{{url('/img/slider-4.webp')}}"
                             class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
                             alt="...">
                     </div>
@@ -138,7 +144,15 @@
 
 
 
-
+    <script>
+        const submitButton = document.getElementById('submit_button');
+        const textSlider = document.querySelector('.text-slider');
+        
+        submitButton.addEventListener('click', () => {
+            textSlider.style.display = 'block';
+            textSlider.classList.add('animate-slide-up');
+        });
+    </script>
 
 
 

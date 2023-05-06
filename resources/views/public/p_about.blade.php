@@ -24,7 +24,10 @@
     @include('layouts.navigation')
 
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col items-center mt-6 ml-16 mr-16">
+
+        
         <section class="flex flex-col items-center">
+            <h1 class="m-4 text-3xl text-gray-300">About BannerAnalyzer</h1>
             <div id="accordion-open" data-accordion="open" class="w-3/4">
                 <h2 id="accordion-open-heading-1">
                     <button type="button"
@@ -134,8 +137,8 @@
         </section>
 
 
-        <section class="p-6">
-
+        <section class="p-12">
+            <h2 class="m-4 text-3xl text-gray-300">Latest system updates</h2>
             <ol class="relative border-l border-gray-200 dark:border-gray-700">
                 <li class="mb-10 ml-4">
                     <div

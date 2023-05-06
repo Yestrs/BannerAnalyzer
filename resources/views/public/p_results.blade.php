@@ -24,58 +24,169 @@
     @include('layouts.navigation')
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900 mt-6 flex flex-col items-center mt-6">
 
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+        {{-- <pre class="text-white"> {{ print_r($obj) }}</pre> --}}
+
+
+
+        <div class="bg-gray-100 dark:bg-gray-900">
             <div class="flex px-4 py-3 text-white bg-gray-900 my-8 mx-16 flex-col items-center rounded-xl">
-                <h1 class="m-4 text-5xl text-gray-300">Results of DOMAIN</h1>
-                <p class="m-2 text-lg text-gray-300">desc of what kind of results are showed</p>
-                <p class="m-2 text-lg text-gray-300">
-                    <pre><?php //echo print_r($obj); ?></pre>
-                </p>
+                <h1 class="m-4 text-5xl text-gray-300">Results of {{ $obj->name }}</h1>
+                <p class="m-2 text-lg text-gray-300">You just tested this website total loading speed, image loading
+                    speed and file loading speed.</p>
+            </div>
+        </div>
+        <div class="max-w-2xl mx-auto mt-8 text-white">
+            <p class="mb-4">URL: {{ $obj->url }}</p>
+
+
+            <div class="py-12">
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-2 gap-4">
+                    <a href="#image_loading_speeds"
+                        class="block text-center max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                            {{ $obj->image_count }}</h5>
+                        <p class="font-normal text-gray-700 dark:text-gray-400">Total valid image count</p>
+                    </a>
+                    <a href="#image_loading_speeds"
+                        class="block text-center max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                            {{ $obj->avg_image_loading_speed }} sec</h5>
+                        <p class="font-normal text-gray-700 dark:text-gray-400">Avarage image loading speed</p>
+                    </a>
+                </div>
+
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-2 gap-4 pt-4">
+
+                    <a href="#website_loading_speeds"
+                        class="block text-center max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                            {{ $obj->recieved_response_speed }} sec</h5>
+                        <p class="font-normal text-gray-700 dark:text-gray-400">Websites handle response time</p>
+                    </a>
+                    <a href="#website_loading_speeds"
+                        class="block text-center max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                            {{ $obj->page_load_time }} sec</h5>
+                        <p class="font-normal text-gray-700 dark:text-gray-400">Total page load time from 0</p>
+                    </a>
+                </div>
+            </div>
+
+
+
+            <h2 id="image_loading_speeds" class="text-2xl font-bold mb-4">See your detailed websites performance down here</h2>
+
+            <div id="accordion-flush" data-accordion="collapse"
+                data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                data-inactive-classes="text-gray-500 dark:text-gray-400">
+                <h2 id="accordion-flush-heading-1">
+                    <button type="button"
+                        class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+                        data-accordion-target="#accordion-flush-body-1" aria-expanded="true"
+                        aria-controls="accordion-flush-body-1">
+                        <span>Loading speeds for image valid groups</span>
+                        <svg data-accordion-icon class="w-6 h-6 rotate-180 shrink-0" fill="currentColor"
+                            viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </h2>
+                <div id="accordion-flush-body-1" class="hidden" aria-labelledby="accordion-flush-heading-1">
+                    <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+                        <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
+                            @foreach ($obj->image_extensions as $ext => $speed)
+                                <li>{{ $ext }} - {{ $speed }} seconds</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+                <h2 id="accordion-flush-heading-2">
+                    <button type="button"
+                        class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+                        data-accordion-target="#accordion-flush-body-2" aria-expanded="false"
+                        aria-controls="accordion-flush-body-2">
+                        <span>Loading speeds for individual image</span>
+                        <svg data-accordion-icon class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </h2>
+                <div id="accordion-flush-body-2" class="hidden" aria-labelledby="accordion-flush-heading-2">
+                    <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+                        <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
+                            @foreach ($obj->image_loading_speed as $url => $speed)
+                                <li>{{ $url }} - {{ $speed }} seconds</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+                <h2 id="accordion-flush-heading-3">
+                    <button type="button"
+                        class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+                        data-accordion-target="#accordion-flush-body-3" aria-expanded="false"
+                        aria-controls="accordion-flush-body-3">
+                        <span>All valid image links</span>
+                        <svg data-accordion-icon class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </h2>
+                <div id="accordion-flush-body-3" class="hidden" aria-labelledby="accordion-flush-heading-3">
+                    <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+                        <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
+                            @foreach ($obj->image_urls as $id => $url)
+                                <li><a target="_blank" class="hover:bg-gray-600" href="{{ $url }}">{{ $id }} - {{ $url }}</a></li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+                <h2 id="accordion-flush-heading-4">
+                    <button type="button"
+                        class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+                        data-accordion-target="#accordion-flush-body-4" aria-expanded="false"
+                        aria-controls="accordion-flush-body-4">
+                        <span>All found base extension loading speeds</span>
+                        <svg data-accordion-icon class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </h2>
+                <div id="accordion-flush-body-4" class="hidden" aria-labelledby="accordion-flush-heading-4">
+                    <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+                        <ul class="list-disc pl-4 mb-8">
+                            <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
+                                @foreach ($obj->page_each_load_time as $ext => $speed)
+                                    <li>{{ $ext }} - {{ $speed }} seconds</li>
+                                @endforeach
+                            </ul>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="max-w-2xl mx-auto mt-8 text-white">
-            <h1 class="text-3xl font-bold mb-4">{{ $obj->name }} website statistics</h1>
-            <p class="mb-4">URL: {{ $obj->url }}</p>
-            <p class="mb-4">Image count: {{ $obj->image_count }}</p>
-          
-            
-          
-            <h2 class="text-2xl font-bold mb-4">Image loading speeds:</h2>
-            <p class="mb-4">Avarage image loading speed: {{ $obj->avg_image_loading_speed }}</p>
-            <ul class="list-disc pl-4 mb-8">
-              @foreach ($obj->image_loading_speed as $url => $speed)
-                <li>{{ $url }} - {{ $speed }} seconds</li>
-              @endforeach
-            </ul>
-          
-            <h2 class="text-2xl font-bold mb-4">Page loading speed:</h2>
-            <p class="mb-8">Load time: {{ $obj->page_load_time }} seconds</p>
-            <ul class="list-disc pl-4 mb-8">
-                @foreach ($obj->page_each_load_time as $ext => $speed)
-                    <li>{{ $ext }} - {{ $speed }} seconds</li>
-                @endforeach
-            </ul>
-            
-          
-          </div>
 
 
-
-        <section class="flex flex-col items-center">
+        <section class="flex flex-col items-center pt-6">
             <h2 class="mb-2 text-3xl font-semibold text-gray-900 text-center dark:text-white">Advice for making your
                 website faster
             </h2>
-
             <br>
-
-
-
-
             <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Improving image extensions:</h2>
             <p class="mb-2 text-l text-gray-900 dark:text-white text-center pb-6">Currently recomended image
                 formats</p>
-            <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+            <ul class="max-w-2xl space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
                 <li>
                     JPEG (Joint Photographic Experts Group): This format is great for photographs and complex images
                     with lots of color and detail. JPEG files can be compressed to reduce their file size without losing
@@ -90,7 +201,8 @@
                     that require only a few colors. They have a low file size, but the animation quality is limited.
                 </li>
                 <li>
-                    <strong>SVG (Scalable Vector Graphics):</strong> SVG is a vector-based image format, which means that it can be
+                    <strong>SVG (Scalable Vector Graphics):</strong> SVG is a vector-based image format, which means
+                    that it can be
                     scaled to any size without losing image quality. It's best for logos, icons, and other simple
                     graphics.
                 </li>
@@ -102,16 +214,12 @@
                     However, not all web browsers support WebP natively, so alternative formats may be needed.
                 </li>
             </ul>
-            <p class="mb-2 text-l text-gray-900 dark:text-white text-center pt-6 w-1/2">Overall, the best image format for your website depends on the type of image and the level of detail required. In general, JPEG is great for photographs, PNG is good for graphics with transparency, GIF is best for simple animations, and SVG is best for vector-based graphics. Overall, WebP can be a great option for websites that prioritize fast loading times and want to reduce their bandwidth usage.</p>
-
-
-
+            <p class="mb-2 text-l text-gray-900 dark:text-white text-center pt-6 w-1/2">Overall, the best image format
+                for your website depends on the type of image and the level of detail required. In general, JPEG is
+                great for photographs, PNG is good for graphics with transparency, GIF is best for simple animations,
+                and SVG is best for vector-based graphics. Overall, WebP can be a great option for websites that
+                prioritize fast loading times and want to reduce their bandwidth usage.</p>
         </section>
-
-
-
-
-
 
         <section class="w-1/2 my-4 flex flex-col items-center">
             <h1 class="m-4 text-3xl text-gray-300">Write your review</h1>
@@ -138,7 +246,6 @@
                 <button type="submit"
                     class="w-full flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                     Submit
-
             </form>
         </section>
 
