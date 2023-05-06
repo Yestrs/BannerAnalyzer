@@ -49,14 +49,7 @@
                 </div>
             </form>
         </div>
-        
-        <div class="text-slider-container mt-4">
-            <div class="text-slider bg-gray-100 p-4 rounded-lg shadow-md" style="display:none;">
-                <p class="text-lg font-medium text-gray-800">Dummy Text 1</p>
-                <p class="text-lg font-medium text-gray-800">Dummy Text 2</p>
-                <p class="text-lg font-medium text-gray-800">Dummy Text 3</p>
-            </div>
-        </div>
+
         
         <div class="flex w-full justify-center" >
             <div id="default-carousel" class="relative w-2/3" data-carousel="slide">
@@ -141,18 +134,6 @@
     </div>
     @include('layouts.footer')
 
-
-
-
-    <script>
-        const submitButton = document.getElementById('submit_button');
-        const textSlider = document.querySelector('.text-slider');
-        
-        submitButton.addEventListener('click', () => {
-            textSlider.style.display = 'block';
-            textSlider.classList.add('animate-slide-up');
-        });
-    </script>
 
 
 
