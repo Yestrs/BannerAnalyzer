@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Banner Analyzer - Results</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -118,6 +118,7 @@
                 </h2>
                 <div id="accordion-flush-body-2" class="hidden" aria-labelledby="accordion-flush-heading-2">
                     <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+                        <p class="text-white">If you don't see all the images here from the list, that is because those images ar protected from external access.</p>
                         <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
                             @foreach ($obj->image_loading_speed as $url => $speed)
                                 <li>{{ $url }} - {{ $speed }} seconds</li>
@@ -141,6 +142,7 @@
                 </h2>
                 <div id="accordion-flush-body-3" class="hidden" aria-labelledby="accordion-flush-heading-3">
                     <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+                        <p class="text-white">If some of the images are not working that is because they are protected from extraction. This is comonlly used for large paid image storages so no one could steal them without water marks.</p>
                         <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
                             @foreach ($obj->image_urls as $id => $url)
                                 <li><a target="_blank" class="hover:bg-gray-600" href="{{ $url }}">{{ $id }} - {{ $url }}</a></li>
@@ -165,7 +167,9 @@
                 <div id="accordion-flush-body-4" class="hidden" aria-labelledby="accordion-flush-heading-4">
                     <div class="py-5 border-b border-gray-200 dark:border-gray-700">
                         <ul class="list-disc pl-4 mb-8">
+                            <p class="text-white">Other means images with variables and unknown source of files that was analyzed.</p>
                             <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
+
                                 @foreach ($obj->page_each_load_time as $ext => $speed)
                                     <li>{{ $ext }} - {{ $speed }} seconds</li>
                                 @endforeach

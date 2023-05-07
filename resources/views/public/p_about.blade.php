@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Banner Analyzer - About</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -144,20 +144,30 @@
                     <div
                         class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700">
                     </div>
-                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">April 19
+                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">May 05
+                        2023</time>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Results page visual and backend fixes and improvements.
+                    </h3>
+                    <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">Added some visual changes to results page and brought more statistics and error handling for protected pages.</p>
+                </li>
+                <li class="mb-10 ml-4">
+                    <div
+                        class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700">
+                    </div>
+                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">April 10
                         2023</time>
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Major admin panel and results
                         updates
                     </h3>
                     <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">Admins now have access to
-                        give other users admin permissions, delete comments, ban, unban users and much mroe</p>
+                        give other users admin permissions, delete comments, ban, unban users and much more</p>
                 </li>
                 <li class="mb-10 ml-4">
                     <div
                         class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700">
                     </div>
                     <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">March
-                        30</time>
+                        20</time>
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Major client UI updates</h3>
                     <p class="text-base font-normal text-gray-500 dark:text-gray-400">Updated client UI from Bootsrap
                         to TailwindCSS for better development process</p>
@@ -166,8 +176,8 @@
                     <div
                         class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white dark:border-gray-900 dark:bg-gray-700">
                     </div>
-                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">April
-                        20</time>
+                    <time class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">March
+                        01</time>
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Started working on this project
                     </h3>
                     <p class="text-base font-normal text-gray-500 dark:text-gray-400">Made Github, autorunner for main

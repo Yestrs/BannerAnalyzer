@@ -13,6 +13,7 @@ use App\Http\Controllers\LogsController;
 use Symfony\Component\DomCrawler\Crawler;
 use Illuminate\Http\Request;
 use App\Models\Searched_websites;
+use GuzzleHttp\Exception\RequestException;
 
 class Searched_WebsitesController extends Controller
 {
@@ -49,6 +50,12 @@ class Searched_WebsitesController extends Controller
 
 
         $obj->image_urls = $this->getImageLinks($url);
+
+        if (!is_array($obj->image_urls)) {
+            $obj->errors = "This site is protected, cant access images.";
+            return view('public.p_results', compact('obj'));
+        }
+
         $obj->image_extensions = $this->countImageExtensions($obj->image_urls);
         $obj->image_loading_speed = $this->calculateLoadingSpeed($obj->image_urls);
         $obj->avg_image_loading_speed = $this->calculateAvarageImageLoadingSpeed($obj->image_loading_speed);
@@ -95,7 +102,20 @@ class Searched_WebsitesController extends Controller
 
     protected function getImageLinks($url)
     {
-        $html = file_get_contents($url);
+        $client = new Client();
+        try {
+            $response = $client->get($url);
+            $html = $response->getBody()->getContents();
+        } catch (RequestException $e) {
+            exit;
+            if ($e->getResponse() && $e->getResponse()->getStatusCode() == 405) {
+                exit;
+                //return "Error: HTTP request failed. Method not allowed.";
+            } else {
+                return $e->getMessage();
+            }
+        }
+
 
         $dom = new DOMDocument();
         @$dom->loadHTML($html);
@@ -105,13 +125,11 @@ class Searched_WebsitesController extends Controller
         foreach ($dom->getElementsByTagName('img') as $img) {
             $src = $img->getAttribute('src');
 
-            // Check if the URL is relative, and if so, prepend the base URL
             if (!filter_var($src, FILTER_VALIDATE_URL)) {
                 $base_url = rtrim($url, '/');
                 $src = $base_url . '/' . ltrim($src, '/');
             }
 
-            // Remove any parameters or anything after the extension
             $src = preg_replace('/\?.*/', '', $src);
 
 
@@ -266,7 +284,10 @@ class Searched_WebsitesController extends Controller
                 }
                 $end = microtime(true);
                 $loadTime = $end - $start;
-                $extension = pathinfo($url, PATHINFO_EXTENSION);
+                $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
+                if ( $extension == "") { 
+                    $extension = "other";
+                }
                 if (!isset($loadTimes[$extension])) {
                     $loadTimes[$extension] = 0;
                 }
@@ -276,7 +297,8 @@ class Searched_WebsitesController extends Controller
         return $loadTimes;
     }
 
-    protected function calculateAvarageImageLoadingSpeed($img_loading_speed_array) {
+    protected function calculateAvarageImageLoadingSpeed($img_loading_speed_array)
+    {
         $total = 0;
         foreach ($img_loading_speed_array as $value) {
             $total += $value;
