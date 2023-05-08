@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Http\Controllers\LogsController;
+use App\Http\Controllers\CommentsController;
 use Symfony\Component\DomCrawler\Crawler;
 use Illuminate\Http\Request;
 use App\Models\Searched_websites;
@@ -26,12 +27,42 @@ class Searched_WebsitesController extends Controller
         return view('admin.a_websites', compact('websites'));
     }
 
+    public function removeWebsitesResults(Request $request) {
+        $website = Searched_websites::find(request('id'));
+        $website->comments()->update(['website_id' => null]);
+        $website->delete();
+        return redirect()->back();
+    }
+
     function getAnalyzedWebsitesData($id)
     {
         $website = Searched_websites::find($id);
         $obj = json_decode($website->data);
         $obj->name = $website->name;
         return view('public.p_results', compact('obj'));
+    }
+
+    function getLeaderboardData() {
+
+        $obj = (object) [];
+
+        $top_3 = Searched_websites::orderBy('points', 'ASC')->take(3)->get();
+
+        $top_10 = Searched_websites::orderBy('points', 'ASC')->take(10)->get();
+
+        foreach ($top_3 as $top3) {
+            $top3arr[] = array(
+                'data' => json_decode($top3->data),
+                'name' => $top3->name,
+                'domain' => $top3->domain,
+                'points' => $top3->points,
+            );
+
+        }
+
+        $obj->top_3 = $top3arr;
+
+        return view('public.p_leaderboard', compact('obj'));
     }
 
 
@@ -70,13 +101,18 @@ class Searched_WebsitesController extends Controller
         }
         $name = parse_url($url, PHP_URL_HOST);
         $obj->name = $name;
+
+        $points = (int)($obj->image_count * $obj->avg_image_loading_speed * 100) + ($obj->recieved_response_speed * 100) + ($obj->page_load_time * 100);
+
+        $obj->points = $points;
+
         $data = json_encode($obj);
         $existingRecord = Searched_websites::where('domain', $url)->first();
         if ($existingRecord) {
             $existingRecord->update([
                 'name' => $name,
                 'data' => $data,
-                'points' => 20,
+                'points' => $points,
                 'search_times' => DB::raw('search_times + 1'),
                 'last_searched_by' => $obj->last_searched_by,
                 'last_searched_by_date' => Carbon::now()
@@ -87,7 +123,7 @@ class Searched_WebsitesController extends Controller
                 'name' => $name,
                 'domain' => $url,
                 'data' => $data,
-                'points' => 20,
+                'points' => $points,
                 'search_times' => 1,
                 'first_searched_by' => $obj->last_searched_by,
                 'first_searched_by_date' => Carbon::now()
@@ -303,7 +339,12 @@ class Searched_WebsitesController extends Controller
         foreach ($img_loading_speed_array as $value) {
             $total += $value;
         }
-        return round($total / count($img_loading_speed_array), 3);
+        if (count($img_loading_speed_array) > 0) {
+            return round($total / count($img_loading_speed_array), 3);
+        } else {
+            return 0;
+        }
+        
     }
 
 

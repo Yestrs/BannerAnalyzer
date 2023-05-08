@@ -3,7 +3,11 @@
     <div class="p-6">
 
         <h2 class="text-lg text-center font-medium text-gray-900 dark:text-gray-100">
-            {{ __('Comment from - ' . $user->username . ' for ' . $website->name) }}
+            @isset($website->name)
+                {{ __('Comment from - ' . $user->username . ' for ' . $website->name) }}
+            @else
+                {{ __('Comment from - ' . $user->username . ' for DELETED') }}
+            @endisset
         </h2>
         <div class="flex items-center justify-center">
             <p class="mt-1 text-sm text-justified text-gray-600 dark:text-gray-400 pb-4">
@@ -16,7 +20,7 @@
                 <x-star-svg></x-star-svg>
             @endfor
         </div>
-        
+
         <div class="p-6">
             <p class="mt-1 text-sm text-justified text-gray-600 dark:text-gray-400 pb-4">
                 @if ($comment->comment)

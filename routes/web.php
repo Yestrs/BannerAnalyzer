@@ -23,6 +23,8 @@ Route::get('/', function () {
 })->name('p_homePage');
 Route::get('about', [CommentsController::class, 'getLatestThreeComments'])->name('p_about');
 
+Route::get('leaderboard', [Searched_WebsitesController::class, 'getLeaderboardData'])->name('p_leaderboard');
+
 //Route::get('/results', function () {
 //    return view('public.p_results');
 //})->name('p_results');
@@ -45,6 +47,7 @@ Route::group(['middleware' => 'auth'], function() {
             Route::get('logs', [LogsController::class, 'getData'])->name('a_logs');
             Route::get('comments', [CommentsController::class, 'getData'])->name('a_comments');
             Route::delete('comments/remove', [CommentsController::class, 'removeComment'])->name('comment.remove');
+            Route::delete('website/remove', [Searched_WebsitesController::class, 'removeWebsitesResults'])->name('website.remove');
             Route::patch('users/ban', [UsersController::class, 'ban'])->name('users.ban');
             Route::patch('users/admin', [UsersController::class, 'setAdmin'])->name('users.admin');
             Route::any('/comments-aprove/{id}', [CommentsController::class, 'commentAprove'])->name('comments-aprove');

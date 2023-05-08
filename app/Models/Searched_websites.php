@@ -4,10 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Comments;
+
 
 class Searched_websites extends Model
 {
     use HasFactory;
+
+
+    public function comments()
+    {
+        return $this->hasMany(Comments::class, 'website_id', 'id');
+    }
 
     protected $fillable = [
         'name',

@@ -88,6 +88,9 @@
                 <x-nav-link-public :href="route('p_about')" :active="request()->routeIs('p_about')">
                     {{ __('About us') }}
                 </x-nav-link-public>
+                <x-nav-link-public :href="route('p_leaderboard')" :active="request()->routeIs('p_leaderboard')">
+                    {{ __('Leaderboard') }}
+                </x-nav-link-public>
             </ul>
         </div>
     </div>
