@@ -48,7 +48,7 @@ class Searched_WebsitesController extends Controller
 
         $top_3 = Searched_websites::orderBy('points', 'ASC')->take(3)->get();
 
-        $top_10 = Searched_websites::orderBy('points', 'ASC')->take(10)->get();
+        $top = Searched_websites::orderBy('points', 'ASC')->take(100)->paginate(2);
 
         foreach ($top_3 as $top3) {
             $top3arr[] = array(
@@ -59,6 +59,8 @@ class Searched_WebsitesController extends Controller
             );
 
         }
+
+        $obj->top = $top;
 
         $obj->top_3 = $top3arr;
 
