@@ -1,10 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Jobs;
 
-
-use App\Jobs\AnalyzeWebsiteJob;
 use Auth;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use DOMDocument;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
@@ -17,67 +21,28 @@ use Illuminate\Http\Request;
 use App\Models\Searched_websites;
 use GuzzleHttp\Exception\RequestException;
 
-class Searched_WebsitesController extends Controller
+class AnalyzeWebsiteJob implements ShouldQueue
 {
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $bug = 0;
-    function getData()
+    /**
+     * Create a new job instance.
+     */
+
+    protected $url;
+
+    public function __construct($url)
     {
-        $websites = Searched_websites::orderBy('updated_at', 'DESC')->paginate(10);
-
-        return view('admin.a_websites', compact('websites'));
+        $this->url = $url;
     }
 
-    public function removeWebsitesResults(Request $request)
+    /**
+     * Execute the job.
+     */
+    public function handle()
     {
-        $website = Searched_websites::find(request('id'));
-        $website->comments()->update(['website_id' => null]);
-        $website->delete();
-        return redirect()->back();
-    }
-
-    function getAnalyzedWebsitesData($id)
-    {
-        $website = Searched_websites::find($id);
-        $obj = json_decode($website->data);
-        $obj->name = $website->name;
-        return view('public.p_results', compact('obj'));
-    }
-
-    function getLeaderboardData()
-    {
-
         $obj = (object) [];
-
-        $top_3 = Searched_websites::orderBy('points', 'ASC')->where('points', '>=', 500)->take(3)->get();
-
-        $top = Searched_websites::orderBy('points', 'ASC')->where('points', '>=', 500)->take(100)->paginate(10);
-
-        foreach ($top_3 as $top3) {
-            $top3arr[] = array(
-                'data' => json_decode($top3->data),
-                'name' => $top3->name,
-                'domain' => $top3->domain,
-                'points' => $top3->points,
-            );
-
-        }
-
-        $obj->top = $top;
-
-        $obj->top_3 = $top3arr;
-
-        return view('public.p_leaderboard', compact('obj'));
-    }
-
-
-
-    function analyzeWebsite(Request $request)
-    {
-
-
-        $obj = (object) [];
-        $url = $request->input('url');
+        $url = $this->url;
         $obj->url = $url;
 
 
@@ -97,7 +62,7 @@ class Searched_WebsitesController extends Controller
         $obj->image_extensions = $this->countImageExtensions($obj->image_urls);
         $obj->image_loading_speed = $this->calculateLoadingSpeed($obj->image_urls);
         $obj->avg_image_loading_speed = $this->calculateAvarageImageLoadingSpeed($obj->image_loading_speed);
-        //$obj->image_resolution = $this->getImageSpaceTaken($obj->image_urls);
+        $obj->image_resolution = $this->getImageSpaceTaken($obj->image_urls);
         $obj->image_count = count($obj->image_urls);
 
 
@@ -109,7 +74,7 @@ class Searched_WebsitesController extends Controller
         $name = parse_url($url, PHP_URL_HOST);
         $obj->name = $name;
 
-        $points = (int) ($obj->image_count * $obj->avg_image_loading_speed * 100) + ($obj->recieved_response_speed * 100) + ($obj->page_load_time * 100);
+        $points = (int)($obj->image_count * $obj->avg_image_loading_speed * 100) + ($obj->recieved_response_speed * 100) + ($obj->page_load_time * 100);
 
         $obj->points = $points;
 
@@ -140,7 +105,6 @@ class Searched_WebsitesController extends Controller
         $log->logAction('searched_website', $searched_website->id, Null);
         return view('public.p_results', compact('obj'));
     }
-
 
 
     protected function getImageLinks($url)
@@ -328,7 +292,7 @@ class Searched_WebsitesController extends Controller
                 $end = microtime(true);
                 $loadTime = $end - $start;
                 $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
-                if ($extension == "") {
+                if ( $extension == "") { 
                     $extension = "other";
                 }
                 if (!isset($loadTimes[$extension])) {
@@ -351,9 +315,6 @@ class Searched_WebsitesController extends Controller
         } else {
             return 0;
         }
-
+        
     }
-
-
-
 }

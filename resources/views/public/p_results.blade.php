@@ -30,9 +30,18 @@
 
         <div class="bg-gray-100 dark:bg-gray-900">
             <div class="flex px-4 py-3 text-white bg-gray-900 my-8 mx-16 flex-col items-center rounded-xl">
-                <h1 class="m-4 text-5xl text-gray-300">Results of {{ $obj->name }}</h1>
+                <h1 class="m-4 text-5xl text-gray-300">Results of {{ $obj->name }} - {{ $obj->points }}</h1>
                 <p class="m-2 text-lg text-gray-300">You just tested this website total loading speed, image loading
-                    speed and file loading speed.</p>
+                    speed and file loading speed.
+                </p>
+
+                @if ($obj->points < 500)
+                <p class="m-2 text-lg text-red-700">Your website analyzed with score lower than 500, that means:
+                    <li>currently developed algorithm did not work properly on this website</li>
+                    <li>The website is in development</li>
+                    <li>The images and banners are stored in safe private storage and not accessable by external algorithms</li>
+                </p>
+                @endif
             </div>
         </div>
         <div class="max-w-2xl mx-auto mt-8 text-white">
