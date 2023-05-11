@@ -16,6 +16,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use Illuminate\Http\Request;
 use App\Models\Searched_websites;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Cache;
 
 class Searched_WebsitesController extends Controller
 {
@@ -46,11 +47,8 @@ class Searched_WebsitesController extends Controller
 
     function getLeaderboardData()
     {
-
         $obj = (object) [];
-
         $top_3 = Searched_websites::orderBy('points', 'ASC')->where('points', '>=', 500)->take(3)->get();
-
         $top = Searched_websites::orderBy('points', 'ASC')->where('points', '>=', 500)->take(100)->paginate(10);
 
         foreach ($top_3 as $top3) {
@@ -64,9 +62,7 @@ class Searched_WebsitesController extends Controller
         }
 
         $obj->top = $top;
-
         $obj->top_3 = $top3arr;
-
         return view('public.p_leaderboard', compact('obj'));
     }
 
@@ -74,19 +70,13 @@ class Searched_WebsitesController extends Controller
 
     function analyzeWebsite(Request $request)
     {
-
-
         $obj = (object) [];
         $url = $request->input('url');
         $obj->url = $url;
 
-
         $obj->recieved_response_speed = $this->measureWebsitePerformance($url);
-        $obj->page_load_time = $this->calculatePageLoadTime($url);
-        $obj->page_each_load_time = $this->calculatePageEachLoadTime($url);
-
-
-
+        //$obj->page_load_time = $this->calculatePageLoadTime($url);
+        //$obj->page_each_load_time = $this->calculatePageEachLoadTime($url);
         $obj->image_urls = $this->getImageLinks($url);
 
         if (!is_array($obj->image_urls)) {
@@ -96,10 +86,10 @@ class Searched_WebsitesController extends Controller
 
         $obj->image_extensions = $this->countImageExtensions($obj->image_urls);
         $obj->image_loading_speed = $this->calculateLoadingSpeed($obj->image_urls);
+        $obj->total_image_Loading_Speed = $this->totalLoadingSpeed($obj->image_loading_speed);
         $obj->avg_image_loading_speed = $this->calculateAvarageImageLoadingSpeed($obj->image_loading_speed);
         //$obj->image_resolution = $this->getImageSpaceTaken($obj->image_urls);
         $obj->image_count = count($obj->image_urls);
-
 
         if (auth()->check()) {
             $obj->last_searched_by = Auth::user()->id;
@@ -109,8 +99,8 @@ class Searched_WebsitesController extends Controller
         $name = parse_url($url, PHP_URL_HOST);
         $obj->name = $name;
 
-        $points = (int) ($obj->image_count * $obj->avg_image_loading_speed * 100) + ($obj->recieved_response_speed * 100) + ($obj->page_load_time * 100);
-
+        // $points = (int) ($obj->image_count * $obj->avg_image_loading_speed * 100) + ($obj->recieved_response_speed * 100) + ($obj->page_load_time * 100);
+        $points = (int) ($obj->image_count * $obj->avg_image_loading_speed * 100) + ($obj->recieved_response_speed * 100) + ($obj->total_image_Loading_Speed * 500);
         $obj->points = $points;
 
         $data = json_encode($obj);
@@ -143,46 +133,82 @@ class Searched_WebsitesController extends Controller
 
 
 
-    protected function getImageLinks($url)
+
+    function getImageLinks($url)
     {
+        $cacheKey = "getImageLinks-" . md5($url);
+        $cached = Cache::get($cacheKey);
+
+        if ($cached) {
+            return $cached;
+        }
         $client = new Client();
         try {
             $response = $client->get($url);
-            $html = $response->getBody()->getContents();
+
+            $pattern = '/https?:\/\/[^\s"]+?\.(?:jpg|jpeg|png|webp|gif)/i';
+
+            $matches = [];
+            $responseBody = $response->getBody()->getContents();
+            preg_match_all($pattern, $responseBody, $matches);
+
+            $uniqueMatches = array_unique($matches[0]);
+            Cache::put($cacheKey, $uniqueMatches, 3600);
+
+            return $uniqueMatches;
         } catch (RequestException $e) {
-            exit;
             if ($e->getResponse() && $e->getResponse()->getStatusCode() == 405) {
-                exit;
-                //return "Error: HTTP request failed. Method not allowed.";
+                return [];
             } else {
                 return $e->getMessage();
             }
         }
-
-
-        $dom = new DOMDocument();
-        @$dom->loadHTML($html);
-
-        $imageLinks = array();
-
-        foreach ($dom->getElementsByTagName('img') as $img) {
-            $src = $img->getAttribute('src');
-
-            if (!filter_var($src, FILTER_VALIDATE_URL)) {
-                $base_url = rtrim($url, '/');
-                $src = $base_url . '/' . ltrim($src, '/');
-            }
-
-            $src = preg_replace('/\?.*/', '', $src);
-
-
-            if (preg_match('/\.(png|jpe?g|gif)$/i', $src) && !preg_match('/\.svg$/i', $src)) {
-                $imageLinks[] = $src;
-            }
-        }
-
-        return $imageLinks;
     }
+
+
+
+
+
+    // protected function getImageLinks($url)
+    // {
+    //     $client = new Client();
+    //     try {
+    //         $response = $client->get($url);
+    //         $html = $response->getBody()->getContents();
+    //     } catch (RequestException $e) {
+    //         exit;
+    //         if ($e->getResponse() && $e->getResponse()->getStatusCode() == 405) {
+    //             exit;
+    //             //return "Error: HTTP request failed. Method not allowed.";
+    //         } else {
+    //             return $e->getMessage();
+    //         }
+    //     }
+
+
+    //     $dom = new DOMDocument();
+    //     @$dom->loadHTML($html);
+
+    //     $imageLinks = array();
+
+    //     foreach ($dom->getElementsByTagName('img') as $img) {
+    //         $src = $img->getAttribute('src');
+
+    //         if (!filter_var($src, FILTER_VALIDATE_URL)) {
+    //             $base_url = rtrim($url, '/');
+    //             $src = $base_url . '/' . ltrim($src, '/');
+    //         }
+
+    //         $src = preg_replace('/\?.*/', '', $src);
+
+
+    //         if (preg_match('/\.(png|jpe?g|gif)$/i', $src) && !preg_match('/\.svg$/i', $src)) {
+    //             $imageLinks[] = $src;
+    //         }
+    //     }
+
+    //     return $imageLinks;
+    // }
 
 
     protected function countImageExtensions($urls)
@@ -205,10 +231,12 @@ class Searched_WebsitesController extends Controller
 
 
 
-    protected function calculateLoadingSpeed(array $imageUrls): array
+    protected function calculateLoadingSpeed(array $imageUrls)
     {
-        $speed = 10; // internet speed in Mbps
+        $speed = 10;
         $loadingTimes = [];
+
+        $totalLoadingSpeed = 0;
 
         foreach ($imageUrls as $url) {
             $headers = get_headers($url, 1);
@@ -216,11 +244,22 @@ class Searched_WebsitesController extends Controller
 
             if ($fileSize) {
                 $loadingTime = $fileSize / ($speed * 125000);
-                $loadingTimes[] = round($loadingTime, 3); // round to 2 decimal places
+                $totalLoadingSpeed += round($loadingTime, 3);
+                $loadingTimes[] = round($loadingTime, 3);
             }
         }
 
         return $loadingTimes;
+    }
+
+    protected function totalLoadingSpeed(array $loadingSpeeds) {
+        $total = 0;
+        foreach ($loadingSpeeds as $speed) {
+            $total += $speed;
+        }
+
+
+        return $total;
     }
 
     protected function getImageSpaceTaken($imageUrls)
@@ -351,9 +390,5 @@ class Searched_WebsitesController extends Controller
         } else {
             return 0;
         }
-
     }
-
-
-
 }

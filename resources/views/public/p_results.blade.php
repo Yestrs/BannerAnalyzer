@@ -36,11 +36,12 @@
                 </p>
 
                 @if ($obj->points < 500)
-                <p class="m-2 text-lg text-red-700">Your website analyzed with score lower than 500, that means:
-                    <li>currently developed algorithm did not work properly on this website</li>
-                    <li>The website is in development</li>
-                    <li>The images and banners are stored in safe private storage and not accessable by external algorithms</li>
-                </p>
+                    <p class="m-2 text-lg text-red-700">Your website analyzed with score lower than 500, that means:
+                        <li>currently developed algorithm did not work properly on this website</li>
+                        <li>The website is in development</li>
+                        <li>The images and banners are stored in safe private storage and not accessable by external
+                            algorithms</li>
+                    </p>
                 @endif
             </div>
         </div>
@@ -60,7 +61,7 @@
                         class="block text-center max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                             {{ $obj->avg_image_loading_speed }} sec</h5>
-                        <p class="font-normal text-gray-700 dark:text-gray-400">Avarage image loading speed</p>
+                        <p class="font-normal text-gray-700 dark:text-gray-400">Avarage banner/image loading speed</p>
                     </a>
                 </div>
 
@@ -75,15 +76,16 @@
                     <a href="#website_loading_speeds"
                         class="block text-center max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                            {{ $obj->page_load_time }} sec</h5>
-                        <p class="font-normal text-gray-700 dark:text-gray-400">Total page load time from 0</p>
+                            {{ $obj->total_image_Loading_Speed }} sec</h5>
+                        <p class="font-normal text-gray-700 dark:text-gray-400">Total banner/image loading speed</p>
                     </a>
                 </div>
             </div>
 
 
 
-            <h2 id="image_loading_speeds" class="text-2xl font-bold mb-4">See your detailed websites performance down here</h2>
+            <h2 id="image_loading_speeds" class="text-2xl font-bold mb-4">See your detailed websites performance down
+                here</h2>
 
             <div id="accordion-flush" data-accordion="collapse"
                 data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
@@ -93,7 +95,7 @@
                         class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
                         data-accordion-target="#accordion-flush-body-1" aria-expanded="true"
                         aria-controls="accordion-flush-body-1">
-                        <span>Loading speeds for image valid groups</span>
+                        <span>Found image extensions and count</span>
                         <svg data-accordion-icon class="w-6 h-6 rotate-180 shrink-0" fill="currentColor"
                             viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
@@ -105,8 +107,8 @@
                 <div id="accordion-flush-body-1" class="hidden" aria-labelledby="accordion-flush-heading-1">
                     <div class="py-5 border-b border-gray-200 dark:border-gray-700">
                         <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
-                            @foreach ($obj->image_extensions as $ext => $speed)
-                                <li>{{ $ext }} - {{ $speed }} seconds</li>
+                            @foreach ($obj->image_extensions as $ext => $exte)
+                                <li>{{ $ext }} - {{ $exte }} extensions</li>
                             @endforeach
                         </ul>
                     </div>
@@ -116,7 +118,7 @@
                         class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
                         data-accordion-target="#accordion-flush-body-2" aria-expanded="false"
                         aria-controls="accordion-flush-body-2">
-                        <span>Loading speeds for individual image</span>
+                        <span>Each image loading speeds</span>
                         <svg data-accordion-icon class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
@@ -127,7 +129,8 @@
                 </h2>
                 <div id="accordion-flush-body-2" class="hidden" aria-labelledby="accordion-flush-heading-2">
                     <div class="py-5 border-b border-gray-200 dark:border-gray-700">
-                        <p class="text-white">If you don't see all the images here from the list, that is because those images ar protected from external access.</p>
+                        <p class="text-white">If you don't see all the images here from the list, that is because those
+                            images ar protected from external access.</p>
                         <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
                             @foreach ($obj->image_loading_speed as $url => $speed)
                                 <li>{{ $url }} - {{ $speed }} seconds</li>
@@ -140,7 +143,7 @@
                         class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
                         data-accordion-target="#accordion-flush-body-3" aria-expanded="false"
                         aria-controls="accordion-flush-body-3">
-                        <span>All valid image links</span>
+                        <span>All found image links</span>
                         <svg data-accordion-icon class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
@@ -151,10 +154,14 @@
                 </h2>
                 <div id="accordion-flush-body-3" class="hidden" aria-labelledby="accordion-flush-heading-3">
                     <div class="py-5 border-b border-gray-200 dark:border-gray-700">
-                        <p class="text-white">If some of the images are not working that is because they are protected from extraction. This is comonlly used for large paid image storages so no one could steal them without water marks.</p>
+                        <p class="text-white">If some of the images are not working that is because they are protected
+                            from extraction. This is comonlly used for large paid image storages so no one could steal
+                            them without water marks.</p>
                         <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
                             @foreach ($obj->image_urls as $id => $url)
-                                <li><a target="_blank" class="hover:bg-gray-600" href="{{ $url }}">{{ $id }} - {{ $url }}</a></li>
+                                <li><a target="_blank" class="hover:bg-gray-600"
+                                        href="{{ $url }}">{{ $id }} - {{ $url }}</a>
+                                </li>
                             @endforeach
                         </ul>
                     </div>
@@ -164,7 +171,7 @@
                         class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
                         data-accordion-target="#accordion-flush-body-4" aria-expanded="false"
                         aria-controls="accordion-flush-body-4">
-                        <span>All found base extension loading speeds</span>
+                        <span>Point system and what it means</span>
                         <svg data-accordion-icon class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
@@ -176,13 +183,19 @@
                 <div id="accordion-flush-body-4" class="hidden" aria-labelledby="accordion-flush-heading-4">
                     <div class="py-5 border-b border-gray-200 dark:border-gray-700">
                         <ul class="list-disc pl-4 mb-8">
-                            <p class="text-white">Other means images with variables and unknown source of files that was analyzed.</p>
-                            <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
+                            
+                        
+                                <h3 class="text-white text-xl">You got {{ $obj->points }} points</h3>
+                                <p class="text-white">What it means and why is that?</p>
 
-                                @foreach ($obj->page_each_load_time as $ext => $speed)
-                                    <li>{{ $ext }} - {{ $speed }} seconds</li>
-                                @endforeach
-                            </ul>
+                                <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
+                                    <li>Less than 200 - That means that this website is under development and mostly empty or it could be our algorithm problem</li>
+                                    <li>Less than 500 - That means that this website is small and images are optimized </li>
+                                    <li>Less than 1000 - That means that this website is normal size website with good server side optimization and good image optimizations </li>
+                                    <li>More than 2000 - This website is probably internet shop or some large image storage or the website could just be not optimized </li>
+                                </ul>
+                                
+                            
                         </ul>
                     </div>
                 </div>
