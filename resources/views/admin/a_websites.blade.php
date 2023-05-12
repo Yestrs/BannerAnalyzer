@@ -18,6 +18,7 @@
                                 class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <th scope="col" class="px-6 py-3">Id</th>
                                 <th scope="col" class="px-6 py-3">Name</th>
+                                <th scope="col" class="px-6 py-3">Points</th>
                                 <th scope="col" class="px-6 py-3">Times Searched</th>
                                 <th scope="col" class="px-6 py-3">Last Searched By</th>
                                 <th scope="col" class="px-6 py-3">Time</th>
@@ -34,6 +35,7 @@
                                             {{ $website->id }}</th>
                                         <td class="px-6 py-4">{{ $website->name }}</td>
                                         {{-- <td class="px-6 py-4 max-w-xs overflow-x-auto">{{ $website->domain }}</td> --}}
+                                        <td class="px-6 py-4">{{ $website->points }}</td>
                                         <td class="px-6 py-4">{{ $website->search_times }}</td>
                                         <td class="px-6 py-4">
                                             @isset($user->username)
