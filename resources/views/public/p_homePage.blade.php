@@ -24,7 +24,7 @@
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900 mt-6 flex flex-col items-center mt-6 ">
 
         <div class="flex px-4 py-3 text-white bg-gray-900 my-8 mx-16 flex-col items-center rounded-xl">
-            <h1 class="m-4 text-5xl text-gray-300">Banner Analyzer</h1>
+            <h1 class="m-4 text-5xl text-gray-300">Banner and Image Analyzer</h1>
             <p class="m-2 text-lg text-gray-300 text-center w-2/3">Analyze your websites loading performance with tool
                 that allows you to see each image speed loading speed individually and gives you hints how to improve
                 your loading speed.</p>
