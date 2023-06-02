@@ -30,7 +30,6 @@ class AnalyzeWebsiteJob implements ShouldQueue
 
     public function handle()
     {
-        echo 'test';
         $obj = (object) [];
         $url = $this->url;
         $obj->url = $url;
@@ -89,7 +88,6 @@ class AnalyzeWebsiteJob implements ShouldQueue
         }
         $log = new LogsController();
         $log->logAction('searched_website', $searched_website->id, Null);
-        print_r($obj);
         return view('public.p_results', compact('obj'));
     }
 
