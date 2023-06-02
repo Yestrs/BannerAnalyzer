@@ -24,7 +24,7 @@
     @include('layouts.navigation')
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900 mt-6 flex flex-col items-center mt-6">
 
-        {{-- <pre class="text-white"> {{ print_r($obj) }}</pre> --}}
+        {{-- <pre class="text-white">{{ print_r($obj->image_urls_test) }}</pre> --}}
 
 
 

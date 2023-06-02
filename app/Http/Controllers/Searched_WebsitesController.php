@@ -12,20 +12,25 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\CommentsController;
+use Illuminate\Support\Facades\Http;
 use Symfony\Component\DomCrawler\Crawler;
 use Illuminate\Http\Request;
 use App\Models\Searched_websites;
 use GuzzleHttp\Exception\RequestException;
-use Illuminate\Support\Facades\Cache;
+
 
 class Searched_WebsitesController extends Controller
 {
+
+    public function runJob()
+    {
+        AnalyzeWebsiteJob::dispatch();
+    }
 
     public $bug = 0;
     function getData()
     {
         $websites = Searched_websites::orderBy('updated_at', 'DESC')->paginate(10);
-
         return view('admin.a_websites', compact('websites'));
     }
 
@@ -58,7 +63,6 @@ class Searched_WebsitesController extends Controller
                 'domain' => $top3->domain,
                 'points' => $top3->points,
             );
-
         }
 
         $obj->top = $top;
@@ -70,78 +74,76 @@ class Searched_WebsitesController extends Controller
 
     function analyzeWebsite(Request $request)
     {
-        $obj = (object) [];
-        $url = $request->input('url');
-        $obj->url = $url;
+        AnalyzeWebsiteJob::dispatch($request->input('url'));
+        // $obj = (object) [];
+        // $url = $request->input('url');
+        // $obj->url = $url;
 
-        $obj->recieved_response_speed = $this->measureWebsitePerformance($url);
-        //$obj->page_load_time = $this->calculatePageLoadTime($url);
-        //$obj->page_each_load_time = $this->calculatePageEachLoadTime($url);
-        $obj->image_urls = $this->getImageLinks($url);
+        // $obj->recieved_response_speed = $this->measureWebsitePerformance($url);
 
-        if (!is_array($obj->image_urls)) {
-            $obj->errors = "This site is protected, cant access images.";
-            return view('public.p_results', compact('obj'));
-        }
+        // $obj->image_urls = $this->getImageLinks($url);
 
-        $obj->image_extensions = $this->countImageExtensions($obj->image_urls);
-        $obj->image_loading_speed = $this->calculateLoadingSpeed($obj->image_urls);
-        $obj->total_image_Loading_Speed = $this->totalLoadingSpeed($obj->image_loading_speed);
-        $obj->avg_image_loading_speed = $this->calculateAvarageImageLoadingSpeed($obj->image_loading_speed);
-        //$obj->image_resolution = $this->getImageSpaceTaken($obj->image_urls);
-        $obj->image_count = count($obj->image_urls);
+        // $obj->image_urls_test = $this->getImageLinksTest($url);
 
-        if (auth()->check()) {
-            $obj->last_searched_by = Auth::user()->id;
-        } else {
-            $obj->last_searched_by = NULL;
-        }
-        $name = parse_url($url, PHP_URL_HOST);
-        $obj->name = $name;
+        // if (!is_array($obj->image_urls)) {
+        //     $obj->errors = "This site is protected, cant access images.";
+        //     return view('public.p_results', compact('obj'));
+        // }
 
-        // $points = (int) ($obj->image_count * $obj->avg_image_loading_speed * 100) + ($obj->recieved_response_speed * 100) + ($obj->page_load_time * 100);
-        $points = (int) ($obj->image_count * $obj->avg_image_loading_speed * 100) + ($obj->recieved_response_speed * 100) + ($obj->total_image_Loading_Speed * 500);
-        $obj->points = $points;
+        // $obj->image_extensions = $this->countImageExtensions($obj->image_urls);
+        // $obj->image_loading_speed = $this->calculateLoadingSpeed($obj->image_urls);
+        // $obj->total_image_Loading_Speed = $this->totalLoadingSpeed($obj->image_loading_speed);
+        // $obj->avg_image_loading_speed = $this->calculateAvarageImageLoadingSpeed($obj->image_loading_speed);
 
-        $data = json_encode($obj);
-        $existingRecord = Searched_websites::where('domain', $url)->first();
-        if ($existingRecord) {
-            $existingRecord->update([
-                'name' => $name,
-                'data' => $data,
-                'points' => $points,
-                'search_times' => DB::raw('search_times + 1'),
-                'last_searched_by' => $obj->last_searched_by,
-                'last_searched_by_date' => Carbon::now()
-            ]);
-            $searched_website = $existingRecord;
-        } else {
-            $searched_website = Searched_websites::create([
-                'name' => $name,
-                'domain' => $url,
-                'data' => $data,
-                'points' => $points,
-                'search_times' => 1,
-                'first_searched_by' => $obj->last_searched_by,
-                'first_searched_by_date' => Carbon::now()
-            ]);
-        }
-        $log = new LogsController();
-        $log->logAction('searched_website', $searched_website->id, Null);
-        return view('public.p_results', compact('obj'));
+        // $obj->image_count = count($obj->image_urls);
+
+        // if (auth()->check()) {
+        //     $obj->last_searched_by = Auth::user()->id;
+        // } else {
+        //     $obj->last_searched_by = NULL;
+        // }
+        // $name = parse_url($url, PHP_URL_HOST);
+        // $obj->name = $name;
+
+        // $points = (int) ($obj->image_count * $obj->avg_image_loading_speed * 100) + ($obj->recieved_response_speed * 100) + ($obj->total_image_Loading_Speed * 500);
+        // $obj->points = $points;
+
+        // $data = json_encode($obj);
+        // $existingRecord = Searched_websites::where('domain', $url)->first();
+        // if ($existingRecord) {
+        //     $existingRecord->update([
+        //         'name' => $name,
+        //         'data' => $data,
+        //         'points' => $points,
+        //         'search_times' => DB::raw('search_times + 1'),
+        //         'last_searched_by' => $obj->last_searched_by,
+        //         'last_searched_by_date' => Carbon::now()
+        //     ]);
+        //     $searched_website = $existingRecord;
+        // } else {
+        //     $searched_website = Searched_websites::create([
+        //         'name' => $name,
+        //         'domain' => $url,
+        //         'data' => $data,
+        //         'points' => $points,
+        //         'search_times' => 1,
+        //         'first_searched_by' => $obj->last_searched_by,
+        //         'first_searched_by_date' => Carbon::now()
+        //     ]);
+        // }
+        // $log = new LogsController();
+        // $log->logAction('searched_website', $searched_website->id, Null);
+        // return view('public.p_results', compact('obj'));
     }
+
+
 
 
 
 
     function getImageLinks($url)
     {
-        $cacheKey = "getImageLinks-" . md5($url);
-        $cached = Cache::get($cacheKey);
 
-        if ($cached) {
-            return $cached;
-        }
         $client = new Client();
         try {
             $response = $client->get($url);
@@ -153,7 +155,6 @@ class Searched_WebsitesController extends Controller
             preg_match_all($pattern, $responseBody, $matches);
 
             $uniqueMatches = array_unique($matches[0]);
-            Cache::put($cacheKey, $uniqueMatches, 3600);
 
             return $uniqueMatches;
         } catch (RequestException $e) {
@@ -165,6 +166,40 @@ class Searched_WebsitesController extends Controller
         }
     }
 
+
+    function getImageLinksTest($url)
+    {
+        $client = new Client();
+        $response = $client->get($url);
+        $html = $response->getBody()->getContents();
+
+        $crawler = new Crawler($html);
+
+        // Get all <img> tag URLs
+        $imageUrls = $crawler->filter('img')->each(function (Crawler $node) {
+            return $node->attr('src');
+        });
+
+        // Get background image URLs from inline styles
+        $backgroundImageUrls = [];
+        $styles = $crawler->filter('style')->each(function (Crawler $node) {
+            return $node->text();
+        });
+
+        foreach ($styles as $style) {
+            $pattern = '/background-image:.*url\((.*?)\)/';
+            preg_match_all($pattern, $style, $matches);
+            $backgroundImageUrls = array_merge($backgroundImageUrls, $matches[1]);
+        }
+
+        // Combine image URLs and background image URLs
+        $allImageUrls = array_merge($imageUrls, $backgroundImageUrls);
+
+        return $allImageUrls;
+    }
+
+
+    //data-bg_img
 
 
 
@@ -252,7 +287,8 @@ class Searched_WebsitesController extends Controller
         return $loadingTimes;
     }
 
-    protected function totalLoadingSpeed(array $loadingSpeeds) {
+    protected function totalLoadingSpeed(array $loadingSpeeds)
+    {
         $total = 0;
         foreach ($loadingSpeeds as $speed) {
             $total += $speed;

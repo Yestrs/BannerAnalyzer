@@ -4,31 +4,22 @@ namespace App\Jobs;
 
 use Auth;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use DOMDocument;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Http\Controllers\LogsController;
-use App\Http\Controllers\CommentsController;
 use Symfony\Component\DomCrawler\Crawler;
-use Illuminate\Http\Request;
 use App\Models\Searched_websites;
 use GuzzleHttp\Exception\RequestException;
 
 class AnalyzeWebsiteJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    /**
-     * Create a new job instance.
-     */
-
     protected $url;
 
     public function __construct($url)
@@ -36,23 +27,19 @@ class AnalyzeWebsiteJob implements ShouldQueue
         $this->url = $url;
     }
 
-    /**
-     * Execute the job.
-     */
+
     public function handle()
     {
+        echo 'test';
         $obj = (object) [];
         $url = $this->url;
         $obj->url = $url;
 
-
         $obj->recieved_response_speed = $this->measureWebsitePerformance($url);
-        $obj->page_load_time = $this->calculatePageLoadTime($url);
-        $obj->page_each_load_time = $this->calculatePageEachLoadTime($url);
-
-
 
         $obj->image_urls = $this->getImageLinks($url);
+
+        $obj->image_urls_test = $this->getImageLinksTest($url);
 
         if (!is_array($obj->image_urls)) {
             $obj->errors = "This site is protected, cant access images.";
@@ -61,10 +48,10 @@ class AnalyzeWebsiteJob implements ShouldQueue
 
         $obj->image_extensions = $this->countImageExtensions($obj->image_urls);
         $obj->image_loading_speed = $this->calculateLoadingSpeed($obj->image_urls);
+        $obj->total_image_Loading_Speed = $this->totalLoadingSpeed($obj->image_loading_speed);
         $obj->avg_image_loading_speed = $this->calculateAvarageImageLoadingSpeed($obj->image_loading_speed);
-        $obj->image_resolution = $this->getImageSpaceTaken($obj->image_urls);
-        $obj->image_count = count($obj->image_urls);
 
+        $obj->image_count = count($obj->image_urls);
 
         if (auth()->check()) {
             $obj->last_searched_by = Auth::user()->id;
@@ -74,8 +61,7 @@ class AnalyzeWebsiteJob implements ShouldQueue
         $name = parse_url($url, PHP_URL_HOST);
         $obj->name = $name;
 
-        $points = (int)($obj->image_count * $obj->avg_image_loading_speed * 100) + ($obj->recieved_response_speed * 100) + ($obj->page_load_time * 100);
-
+        $points = (int) ($obj->image_count * $obj->avg_image_loading_speed * 100) + ($obj->recieved_response_speed * 100) + ($obj->total_image_Loading_Speed * 500);
         $obj->points = $points;
 
         $data = json_encode($obj);
@@ -103,50 +89,64 @@ class AnalyzeWebsiteJob implements ShouldQueue
         }
         $log = new LogsController();
         $log->logAction('searched_website', $searched_website->id, Null);
+        print_r($obj);
         return view('public.p_results', compact('obj'));
     }
 
-
-    protected function getImageLinks($url)
+    function getImageLinks($url)
     {
+
         $client = new Client();
         try {
             $response = $client->get($url);
-            $html = $response->getBody()->getContents();
+
+            $pattern = '/https?:\/\/[^\s"]+?\.(?:jpg|jpeg|png|webp|gif)/i';
+
+            $matches = [];
+            $responseBody = $response->getBody()->getContents();
+            preg_match_all($pattern, $responseBody, $matches);
+
+            $uniqueMatches = array_unique($matches[0]);
+
+            return $uniqueMatches;
         } catch (RequestException $e) {
-            exit;
             if ($e->getResponse() && $e->getResponse()->getStatusCode() == 405) {
-                exit;
-                //return "Error: HTTP request failed. Method not allowed.";
+                return [];
             } else {
                 return $e->getMessage();
             }
         }
+    }
 
+    function getImageLinksTest($url)
+    {
+        $client = new Client();
+        $response = $client->get($url);
+        $html = $response->getBody()->getContents();
 
-        $dom = new DOMDocument();
-        @$dom->loadHTML($html);
+        $crawler = new Crawler($html);
 
-        $imageLinks = array();
+        $imageUrls = $crawler->filter('img')->each(function (Crawler $node) {
+            return $node->attr('src');
+        });
 
-        foreach ($dom->getElementsByTagName('img') as $img) {
-            $src = $img->getAttribute('src');
+        $backgroundImageUrls = [];
+        $styles = $crawler->filter('style')->each(function (Crawler $node) {
+            return $node->text();
+        });
 
-            if (!filter_var($src, FILTER_VALIDATE_URL)) {
-                $base_url = rtrim($url, '/');
-                $src = $base_url . '/' . ltrim($src, '/');
-            }
-
-            $src = preg_replace('/\?.*/', '', $src);
-
-
-            if (preg_match('/\.(png|jpe?g|gif)$/i', $src) && !preg_match('/\.svg$/i', $src)) {
-                $imageLinks[] = $src;
-            }
+        foreach ($styles as $style) {
+            $pattern = '/background-image:.*url\((.*?)\)/';
+            preg_match_all($pattern, $style, $matches);
+            $backgroundImageUrls = array_merge($backgroundImageUrls, $matches[1]);
         }
 
-        return $imageLinks;
+        $allImageUrls = array_merge($imageUrls, $backgroundImageUrls);
+
+        return $allImageUrls;
     }
+
+
 
 
     protected function countImageExtensions($urls)
@@ -169,10 +169,12 @@ class AnalyzeWebsiteJob implements ShouldQueue
 
 
 
-    protected function calculateLoadingSpeed(array $imageUrls): array
+    protected function calculateLoadingSpeed(array $imageUrls)
     {
-        $speed = 10; // internet speed in Mbps
+        $speed = 10;
         $loadingTimes = [];
+
+        $totalLoadingSpeed = 0;
 
         foreach ($imageUrls as $url) {
             $headers = get_headers($url, 1);
@@ -180,11 +182,23 @@ class AnalyzeWebsiteJob implements ShouldQueue
 
             if ($fileSize) {
                 $loadingTime = $fileSize / ($speed * 125000);
-                $loadingTimes[] = round($loadingTime, 3); // round to 2 decimal places
+                $totalLoadingSpeed += round($loadingTime, 3);
+                $loadingTimes[] = round($loadingTime, 3);
             }
         }
 
         return $loadingTimes;
+    }
+
+    protected function totalLoadingSpeed(array $loadingSpeeds)
+    {
+        $total = 0;
+        foreach ($loadingSpeeds as $speed) {
+            $total += $speed;
+        }
+
+
+        return $total;
     }
 
     protected function getImageSpaceTaken($imageUrls)
@@ -292,7 +306,7 @@ class AnalyzeWebsiteJob implements ShouldQueue
                 $end = microtime(true);
                 $loadTime = $end - $start;
                 $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
-                if ( $extension == "") { 
+                if ($extension == "") {
                     $extension = "other";
                 }
                 if (!isset($loadTimes[$extension])) {
@@ -315,6 +329,7 @@ class AnalyzeWebsiteJob implements ShouldQueue
         } else {
             return 0;
         }
-        
     }
+
+
 }
