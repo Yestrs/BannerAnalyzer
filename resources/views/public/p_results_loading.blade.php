@@ -25,10 +25,7 @@
     @include('layouts.navigation')
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900 mt-6 flex flex-col items-center mt-6">
 
-        {{-- <pre class="text-white">{{ print_r($obj->image_urls_test) }}</pre> --}}
-        <div id="responseContainer" class="text-white"></div>
-
-
+        <p class="text-white p-12">This could take from 10 seconds to 1 minute, it is based on how many images and banners.</p>
         <div class="absolute top-1/2 left-1/2 -mt-4 -ml-2 h-8 w-4 text-indigo-700">
             <div class="absolute z-10 -ml-2 h-8 w-8 animate-bounce">
               <svg xmlns="http://www.w3.org/2000/svg" class="animate-spin" fill="currentColor" stroke="currentColor" stroke-width="0" viewBox="0 0 16 16">
@@ -37,7 +34,8 @@
             </div>
             <div class="absolute top-4 h-5 w-4 animate-bounce border-l-2 border-gray-200" style="rotate: -90deg"></div>
             <div class="absolute top-4 h-5 w-4 animate-bounce border-r-2 border-gray-200" style="rotate: 90deg"></div>
-          </div>
+
+        </div>
 
 
         <div id="form_submited">
@@ -80,21 +78,14 @@
             </ul>
         </div>
 
-
-
-
-
         <script>
             function executeController() {
                 var queryString = window.location.search;
 
-                // Create a URLSearchParams object from the query string
                 var searchParams = new URLSearchParams(queryString);
 
-                // Get the value of the 'url' parameter
                 var encodedUrl = searchParams.get('url');
 
-                // Decode the URL parameter
                 var decodedUrl = decodeURIComponent(encodedUrl);
 
                 var domain = decodedUrl;
@@ -103,7 +94,7 @@
                     type: 'GET',
                     data: {
                         domain: domain
-                    }, // Pass the 'domain' value as a query parameter
+                    },
                     success: function(response) {
                         window.location.href = '/results/' + response;
                     },
