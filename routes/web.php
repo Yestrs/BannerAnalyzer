@@ -29,8 +29,8 @@ Route::get('leaderboard', [Searched_WebsitesController::class, 'getLeaderboardDa
 //    return view('public.p_results');
 //})->name('p_results');
 
-
-Route::any('/results', [Searched_WebsitesController::class, 'analyzeWebsite']);
+Route::get('/results_waiting_website', [Searched_WebsitesController::class, 'waitForWebsite']);
+Route::any('/results_waiting', [Searched_WebsitesController::class, 'analyzeWebsite'])->name('p_results_init');
 
 Route::any('/results/{id}', [Searched_WebsitesController::class, 'getAnalyzedWebsitesData'])->name('p_results');
 

@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\CommentsController;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Response;
 use Symfony\Component\DomCrawler\Crawler;
 use Illuminate\Http\Request;
 use App\Models\Searched_websites;
@@ -22,17 +23,36 @@ use GuzzleHttp\Exception\RequestException;
 class Searched_WebsitesController extends Controller
 {
 
-    public function runJob()
-    {
-        AnalyzeWebsiteJob::dispatch();
-    }
-
     public $bug = 0;
     function getData()
     {
         $websites = Searched_websites::orderBy('updated_at', 'DESC')->paginate(10);
         return view('admin.a_websites', compact('websites'));
     }
+
+
+    function waitForWebsite(Request $request) {
+        $domain = $request->query('domain');
+        $website = Searched_websites::where('domain', $domain)->first();
+    
+        if ($website && $website->last_searched_by_date >= Carbon::now()->subMinute()) {
+            return $website->id;
+        } else {
+            return response()->json(['error' => 'Website not found or not updated recently'], 404);
+        }
+    }
+
+    // function waitForWebsite(Request $request) {
+    //     $domain = $request->query('domain');
+    //     return $domain;
+
+
+
+    //     // $website = Searched_websites::where('domain', $domain)->get();
+    //     // $obj = json_decode($website->data);
+    //     // $obj->name = $website->name;
+    //     // return view('public.p_results', compact('obj'));
+    // }
 
     public function removeWebsitesResults(Request $request)
     {
@@ -75,6 +95,11 @@ class Searched_WebsitesController extends Controller
     function analyzeWebsite(Request $request)
     {
         AnalyzeWebsiteJob::dispatch($request->input('url'));
+        $url = $request->input('url');
+
+        return view('public.p_results_loading')->with('domain', $url);
+
+
         // $obj = (object) [];
         // $url = $request->input('url');
         // $obj->url = $url;

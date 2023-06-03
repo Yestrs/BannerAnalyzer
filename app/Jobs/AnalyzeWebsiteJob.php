@@ -6,6 +6,8 @@ use Auth;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Http\Client\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use GuzzleHttp\Exception\GuzzleException;
@@ -13,6 +15,8 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Http\Controllers\LogsController;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\DomCrawler\Crawler;
 use App\Models\Searched_websites;
 use GuzzleHttp\Exception\RequestException;
@@ -28,6 +32,11 @@ class AnalyzeWebsiteJob implements ShouldQueue
     }
 
 
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
     public function handle()
     {
         $obj = (object) [];
@@ -39,11 +48,6 @@ class AnalyzeWebsiteJob implements ShouldQueue
         $obj->image_urls = $this->getImageLinks($url);
 
         $obj->image_urls_test = $this->getImageLinksTest($url);
-
-        if (!is_array($obj->image_urls)) {
-            $obj->errors = "This site is protected, cant access images.";
-            return view('public.p_results', compact('obj'));
-        }
 
         $obj->image_extensions = $this->countImageExtensions($obj->image_urls);
         $obj->image_loading_speed = $this->calculateLoadingSpeed($obj->image_urls);
@@ -83,12 +87,16 @@ class AnalyzeWebsiteJob implements ShouldQueue
                 'points' => $points,
                 'search_times' => 1,
                 'first_searched_by' => $obj->last_searched_by,
-                'first_searched_by_date' => Carbon::now()
+                'first_searched_by_date' => Carbon::now(),
+                'last_searched_by' => $obj->last_searched_by,
+                'last_searched_by_date' => Carbon::now()
             ]);
         }
+
         $log = new LogsController();
         $log->logAction('searched_website', $searched_website->id, Null);
-        return view('public.p_results', compact('obj'));
+        return $obj;
+
     }
 
     function getImageLinks($url)
@@ -327,6 +335,7 @@ class AnalyzeWebsiteJob implements ShouldQueue
         } else {
             return 0;
         }
+
     }
 
 
