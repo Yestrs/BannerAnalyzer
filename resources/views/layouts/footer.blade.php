@@ -10,7 +10,7 @@
                     <a href="{{route('p_about')}}" class="mr-4 hover:underline md:mr-6 ">About</a>
                 </li>
                 <li>
-                    <a href="#" class="mr-4 hover:underline md:mr-6">Privacy Policy</a>
+                    <a href="{{route('p_privacypolicy')}}" class="mr-4 hover:underline md:mr-6">Privacy Policy</a>
                 </li>
             </ul>
         </div>

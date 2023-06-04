@@ -23,6 +23,11 @@ Route::get('/', function () {
 })->name('p_homePage');
 Route::get('about', [CommentsController::class, 'getLatestThreeComments'])->name('p_about');
 
+
+Route::get('/privacy_policy', function () {
+    return view('public.p_privacy_policy');
+})->name('p_privacypolicy');
+
 Route::get('leaderboard', [Searched_WebsitesController::class, 'getLeaderboardData'])->name('p_leaderboard');
 
 Route::get('/results_waiting_website', [Searched_WebsitesController::class, 'waitForWebsite']);
