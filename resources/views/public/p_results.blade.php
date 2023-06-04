@@ -23,8 +23,12 @@
 <body class="font-sans antialiased bg-gray-100 dark:bg-gray-900">
     @include('layouts.navigation')
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900 mt-6 flex flex-col items-center mt-6">
+        {{-- @isset($obj->background_image_links)
+            <pre class="text-white">{{ print_r($obj->background_image_links) }}</pre>
+        @else
+            <p class="text-white">none</p>
+        @endisset --}}
 
-        {{-- <pre class="text-white">{{ print_r($obj->image_urls_test) }}</pre> --}}
 
 
 
@@ -82,124 +86,131 @@
                 </div>
             </div>
 
+            @auth
+                <h2 id="image_loading_speeds" class="text-2xl font-bold mb-4">See your detailed websites performance down
+                    here</h2>
+
+                <div id="accordion-flush" data-accordion="collapse"
+                    data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                    data-inactive-classes="text-gray-500 dark:text-gray-400">
+                    <h2 id="accordion-flush-heading-1">
+                        <button type="button"
+                            class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+                            data-accordion-target="#accordion-flush-body-1" aria-expanded="true"
+                            aria-controls="accordion-flush-body-1">
+                            <span>Found image extensions and count</span>
+                            <svg data-accordion-icon class="w-6 h-6 rotate-180 shrink-0" fill="currentColor"
+                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </h2>
+                    <div id="accordion-flush-body-1" class="hidden" aria-labelledby="accordion-flush-heading-1">
+                        <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+                            <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
+                                @foreach ($obj->image_extensions as $ext => $exte)
+                                    <li>{{ $ext }} - {{ $exte }} extensions</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    <h2 id="accordion-flush-heading-2">
+                        <button type="button"
+                            class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+                            data-accordion-target="#accordion-flush-body-2" aria-expanded="false"
+                            aria-controls="accordion-flush-body-2">
+                            <span>Each image loading speeds</span>
+                            <svg data-accordion-icon class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </h2>
+                    <div id="accordion-flush-body-2" class="hidden" aria-labelledby="accordion-flush-heading-2">
+                        <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+                            <p class="text-white">If you don't see all the images here from the list, that is because those
+                                images ar protected from external access.</p>
+                            <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
+                                @foreach ($obj->image_loading_speed as $url => $speed)
+                                    <li>{{ $url }} - {{ $speed }} seconds</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    <h2 id="accordion-flush-heading-3">
+                        <button type="button"
+                            class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+                            data-accordion-target="#accordion-flush-body-3" aria-expanded="false"
+                            aria-controls="accordion-flush-body-3">
+                            <span>All found image links</span>
+                            <svg data-accordion-icon class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </h2>
+                    <div id="accordion-flush-body-3" class="hidden" aria-labelledby="accordion-flush-heading-3">
+                        <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+                            <p class="text-white">If some of the images are not working that is because they are protected
+                                from extraction. This is comonlly used for large paid image storages so no one could steal
+                                them without water marks.</p>
+                            <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
+                                @foreach ($obj->image_urls as $id => $url)
+                                    <li><a target="_blank" class="hover:bg-gray-600"
+                                            href="{{ $url }}">{{ $id }} - {{ $url }}</a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    <h2 id="accordion-flush-heading-4">
+                        <button type="button"
+                            class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+                            data-accordion-target="#accordion-flush-body-4" aria-expanded="false"
+                            aria-controls="accordion-flush-body-4">
+                            <span>Point system and what it means</span>
+                            <svg data-accordion-icon class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </h2>
+                    <div id="accordion-flush-body-4" class="hidden" aria-labelledby="accordion-flush-heading-4">
+                        <div class="py-5 border-b border-gray-200 dark:border-gray-700">
+                            <ul class="list-disc pl-4 mb-8">
 
 
-            <h2 id="image_loading_speeds" class="text-2xl font-bold mb-4">See your detailed websites performance down
-                here</h2>
-
-            <div id="accordion-flush" data-accordion="collapse"
-                data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                data-inactive-classes="text-gray-500 dark:text-gray-400">
-                <h2 id="accordion-flush-heading-1">
-                    <button type="button"
-                        class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
-                        data-accordion-target="#accordion-flush-body-1" aria-expanded="true"
-                        aria-controls="accordion-flush-body-1">
-                        <span>Found image extensions and count</span>
-                        <svg data-accordion-icon class="w-6 h-6 rotate-180 shrink-0" fill="currentColor"
-                            viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
-                </h2>
-                <div id="accordion-flush-body-1" class="hidden" aria-labelledby="accordion-flush-heading-1">
-                    <div class="py-5 border-b border-gray-200 dark:border-gray-700">
-                        <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
-                            @foreach ($obj->image_extensions as $ext => $exte)
-                                <li>{{ $ext }} - {{ $exte }} extensions</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-                <h2 id="accordion-flush-heading-2">
-                    <button type="button"
-                        class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
-                        data-accordion-target="#accordion-flush-body-2" aria-expanded="false"
-                        aria-controls="accordion-flush-body-2">
-                        <span>Each image loading speeds</span>
-                        <svg data-accordion-icon class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
-                </h2>
-                <div id="accordion-flush-body-2" class="hidden" aria-labelledby="accordion-flush-heading-2">
-                    <div class="py-5 border-b border-gray-200 dark:border-gray-700">
-                        <p class="text-white">If you don't see all the images here from the list, that is because those
-                            images ar protected from external access.</p>
-                        <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
-                            @foreach ($obj->image_loading_speed as $url => $speed)
-                                <li>{{ $url }} - {{ $speed }} seconds</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-                <h2 id="accordion-flush-heading-3">
-                    <button type="button"
-                        class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
-                        data-accordion-target="#accordion-flush-body-3" aria-expanded="false"
-                        aria-controls="accordion-flush-body-3">
-                        <span>All found image links</span>
-                        <svg data-accordion-icon class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
-                </h2>
-                <div id="accordion-flush-body-3" class="hidden" aria-labelledby="accordion-flush-heading-3">
-                    <div class="py-5 border-b border-gray-200 dark:border-gray-700">
-                        <p class="text-white">If some of the images are not working that is because they are protected
-                            from extraction. This is comonlly used for large paid image storages so no one could steal
-                            them without water marks.</p>
-                        <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
-                            @foreach ($obj->image_urls as $id => $url)
-                                <li><a target="_blank" class="hover:bg-gray-600"
-                                        href="{{ $url }}">{{ $id }} - {{ $url }}</a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-                <h2 id="accordion-flush-heading-4">
-                    <button type="button"
-                        class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
-                        data-accordion-target="#accordion-flush-body-4" aria-expanded="false"
-                        aria-controls="accordion-flush-body-4">
-                        <span>Point system and what it means</span>
-                        <svg data-accordion-icon class="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
-                </h2>
-                <div id="accordion-flush-body-4" class="hidden" aria-labelledby="accordion-flush-heading-4">
-                    <div class="py-5 border-b border-gray-200 dark:border-gray-700">
-                        <ul class="list-disc pl-4 mb-8">
-                            
-                        
                                 <h3 class="text-white text-xl">You got {{ $obj->points }} points</h3>
                                 <p class="text-white">What it means and why is that?</p>
 
                                 <ul class="text-gray-500 dark:text-gray-400 list-disc pl-4 mb-8">
-                                    <li>Less than 200 - That means that this website is under development and mostly empty or it could be our algorithm problem</li>
+                                    <li>Less than 200 - That means that this website is under development and mostly empty
+                                        or it could be our algorithm problem</li>
                                     <li>Less than 500 - That means that this website is small and images are optimized </li>
-                                    <li>Less than 1000 - That means that this website is normal size website with good server side optimization and good image optimizations </li>
-                                    <li>More than 2000 - This website is probably internet shop or some large image storage or the website could just be not optimized </li>
+                                    <li>Less than 1000 - That means that this website is normal size website with good
+                                        server side optimization and good image optimizations </li>
+                                    <li>More than 2000 - This website is probably internet shop or some large image storage
+                                        or the website could just be not optimized </li>
                                 </ul>
-                                
-                            
-                        </ul>
+
+
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @else
+                <p class="text-white text-4xl text-center m-16">To see more results register <a class="text-green-700" href="{{route('register')}}">HERE</a></p>
+            @endauth
+
+
         </div>
 
 

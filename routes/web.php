@@ -25,9 +25,6 @@ Route::get('about', [CommentsController::class, 'getLatestThreeComments'])->name
 
 Route::get('leaderboard', [Searched_WebsitesController::class, 'getLeaderboardData'])->name('p_leaderboard');
 
-//Route::get('/results', function () {
-//    return view('public.p_results');
-//})->name('p_results');
 
 Route::get('/results_waiting_website', [Searched_WebsitesController::class, 'waitForWebsite']);
 Route::any('/results_waiting', [Searched_WebsitesController::class, 'analyzeWebsite'])->name('p_results_init');

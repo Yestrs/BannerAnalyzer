@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use Auth;
+use DOMDocument;
+use DOMXPath;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -12,9 +14,11 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use Goutte\Client as GoutteClient;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Http\Controllers\LogsController;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\DomCrawler\Crawler;
@@ -173,8 +177,6 @@ class AnalyzeWebsiteJob implements ShouldQueue
         return $extensions;
     }
 
-
-
     protected function calculateLoadingSpeed(array $imageUrls)
     {
         $speed = 10;
@@ -202,8 +204,6 @@ class AnalyzeWebsiteJob implements ShouldQueue
         foreach ($loadingSpeeds as $speed) {
             $total += $speed;
         }
-
-
         return $total;
     }
 
@@ -244,11 +244,10 @@ class AnalyzeWebsiteJob implements ShouldQueue
         try {
             $response = $client->request('GET', $url);
         } catch (GuzzleException $e) {
-            // Handle any exceptions that may occur
-            return -1; // Return -1 to indicate an error
+            return -1;
         }
         $endTime = microtime(true);
-        return round($endTime - $startTime, 3); // Return the time taken to receive the response
+        return round($endTime - $startTime, 3);
     }
 
 
