@@ -3,24 +3,16 @@
 namespace App\Jobs;
 
 use Auth;
-use DOMDocument;
-use DOMXPath;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Http\Client\Response;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
-use Goutte\Client as GoutteClient;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Http\Controllers\LogsController;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\DomCrawler\Crawler;
 use App\Models\Searched_websites;
 use GuzzleHttp\Exception\RequestException;

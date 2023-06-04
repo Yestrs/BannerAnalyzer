@@ -2,23 +2,10 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Jobs\AnalyzeWebsiteJob;
-use Auth;
-use DOMDocument;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use App\Http\Controllers\LogsController;
-use App\Http\Controllers\CommentsController;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Response;
-use Symfony\Component\DomCrawler\Crawler;
 use Illuminate\Http\Request;
 use App\Models\Searched_websites;
-use GuzzleHttp\Exception\RequestException;
 
 
 class Searched_WebsitesController extends Controller
@@ -90,6 +77,5 @@ class Searched_WebsitesController extends Controller
 
         return view('public.p_results_loading')->with('domain', $url);
     }
-
 
 }

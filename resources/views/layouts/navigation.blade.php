@@ -35,9 +35,6 @@
                             </x-dropdown-link>
                         @endif
 
-
-
-
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
