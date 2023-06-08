@@ -28,6 +28,18 @@ Route::get('/privacy_policy', function () {
     return view('public.p_privacy_policy');
 })->name('p_privacypolicy');
 
+Route::get('/demo', function () {
+    return view('public.p_demo');
+})->name('p_demo');
+
+Route::get('/download', function () {
+    $file = public_path('Livins_KD_PowerPoint.pptx');
+    $headers = [
+        'Content-Type' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    ];
+    return response()->download($file, 'presentation.pptx', $headers);
+});
+
 Route::get('leaderboard', [Searched_WebsitesController::class, 'getLeaderboardData'])->name('p_leaderboard');
 
 Route::get('/results_waiting_website', [Searched_WebsitesController::class, 'waitForWebsite']);
